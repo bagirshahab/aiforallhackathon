@@ -5,14 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Hackathon — Project Submission</title>
-    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="submit-project.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-    <!-- Navigasi -->
+    <!-- Navbar -->
     <nav id="navbar">
         <div class="nav-container">
             <div class="brand">
@@ -55,13 +54,13 @@
                         <input type="text" id="team_name" name="team_name" placeholder="Enter team name" required>
                     </div>
 
-                    <!-- Email Contact -->
+                    <!-- Contact Email -->
                     <div class="form-group">
-                        <label for="email" data-i18n="label_email">Contact Email (Leader)</label>
+                        <label for="email" data-i18n="label_email">Contact Email</label>
                         <input type="email" id="email" name="email" placeholder="teamleader@example.com" required>
                     </div>
 
-                    <!-- Team Members (5 Lines) -->
+                    <!-- Team Members -->
                     <div class="form-group">
                         <label data-i18n="label_team_members">Team Members (Up to 5 members)</label>
                         <div class="members-inputs">
@@ -85,13 +84,12 @@
                         <textarea id="project_description" name="project_description" rows="4" placeholder="Brief explanation of your AI solution..." required></textarea>
                     </div>
 
-                    <!-- URL / Hosted Project -->
+                    <!-- URL / HTML File -->
                     <div class="form-group">
                         <label for="html_url" data-i18n="label_html_url">URL of HTML / Hosted Project</label>
                         <input type="url" id="html_url" name="html_url" placeholder="https://your-project.vercel.app or GitHub link">
                     </div>
 
-                    <!-- Upload File -->
                     <div class="form-group">
                         <label for="file_html" data-i18n="label_html_file">OR Upload HTML File</label>
                         <div class="file-input-wrapper">
@@ -119,7 +117,6 @@
                         </label>
                     </div>
 
-                    <!-- Submit Button -->
                     <button type="submit" class="btn-primary btn-submit" id="submit-btn">
                         <span id="submit-btn-text" data-i18n="btn_submit">Submit Project</span>
                     </button>
