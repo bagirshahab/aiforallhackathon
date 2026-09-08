@@ -6,6 +6,7 @@
     --true-red: #E60000;
     --true-dark-red: #B30000;
     --true-cyan: #00F0FF;
+    --true-orange: #FF7A00;
     --true-bg-dark: #0A0E17;
     --true-card-bg: #121824;
     --true-border: #1E293B;
@@ -20,7 +21,7 @@ body {
     margin: 0;
 }
 
-/* Layout helpers (previously missing / relied on external styles.css) */
+/* Layout helpers */
 .container {
     max-width: 1100px;
     margin: 0 auto;
@@ -86,7 +87,7 @@ body {
     gap: 0.25rem;
     background: var(--true-card-bg);
     padding: 0.25rem;
-    border-radius: 6px;
+    border-radius: 8px;
     border: 1px solid var(--true-border);
 }
 
@@ -94,11 +95,11 @@ body {
     background: transparent;
     border: none;
     color: var(--true-text-muted);
-    padding: 0.3rem 0.6rem;
-    font-size: 0.75rem;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.8rem;
     font-weight: 700;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 6px;
     transition: all 0.2s;
 }
 
@@ -113,6 +114,7 @@ body {
     padding-bottom: 2.5rem;
     text-align: center;
     background: radial-gradient(circle at top, rgba(230, 0, 0, 0.15) 0%, transparent 70%);
+    border-left: 4px solid var(--true-orange);
 }
 
 .eyebrow {
@@ -124,9 +126,10 @@ body {
 }
 
 .page-hero h1 {
-    font-size: 2.5rem;
+    font-size: 2.75rem;
     font-weight: 800;
     margin: 0.5rem 0;
+    line-height: 1.15;
 }
 
 .subheadline {
@@ -298,37 +301,29 @@ body {
     font-size: 0.8rem;
 }
 
-/* ===== Responsive: Tablet ===== */
+/* ===== Responsive: Tablet & Mobile ===== */
 @media (max-width: 768px) {
     .nav-container {
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 0.75rem 1rem;
+        padding: 0.9rem 1.25rem;
     }
 
+    /* Sembunyikan nav links (Tentang/Program/Submit Proyek) di HP */
     .nav-links {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-        margin-top: 0.6rem;
-    }
-
-    .nav-links a {
-        margin: 0 0.6rem;
-        font-size: 0.9rem;
+        display: none;
     }
 
     .page-hero {
-        padding-top: 8.5rem;
+        padding-top: 6.5rem;
         padding-bottom: 2rem;
     }
 
     .page-hero h1 {
-        font-size: 1.9rem;
+        font-size: 2.1rem;
+        line-height: 1.15;
     }
 
     .subheadline {
-        font-size: 0.9rem;
+        font-size: 0.95rem;
     }
 
     .form-card {
@@ -338,19 +333,19 @@ body {
     }
 }
 
-/* ===== Responsive: Mobile ===== */
+/* ===== Responsive: Mobile kecil ===== */
 @media (max-width: 480px) {
     .logo-text {
-        font-size: 1.05rem;
+        font-size: 1.1rem;
     }
 
     .lang-btn {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.7rem;
+        padding: 0.35rem 0.8rem;
+        font-size: 0.8rem;
     }
 
     .page-hero h1 {
-        font-size: 1.6rem;
+        font-size: 1.9rem;
     }
 
     .eyebrow {
@@ -359,7 +354,7 @@ body {
     }
 
     .subheadline {
-        font-size: 0.85rem;
+        font-size: 0.9rem;
     }
 
     .form-card {
