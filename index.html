@@ -1,30 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI For All Hackathon — Project Submission</title>
+    <title>AI Hackathon — Project Submission</title>
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="submit-project.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-    <!-- Navbar -->
+    <!-- Navigasi -->
     <nav id="navbar">
         <div class="nav-container">
             <div class="brand">
-                <span class="logo-text">AI FOR ALL HACKATHON</span>
+                <span class="logo-text">AI HACKATHON</span>
             </div>
             <div class="nav-links">
-                <a href="submit-project.html" class="active" data-i18n="nav_submit">Submit Project</a>
-            </div>
-            <div class="nav-actions">
-                <div class="lang-switcher">
-                    <button type="button" class="lang-btn active" data-lang="en">EN</button>
-                    <button type="button" class="lang-btn" data-lang="th">TH</button>
-                </div>
+                <a href="index.html#about">เกี่ยวกับ</a>
+                <a href="index.html#program">โปรแกรม</a>
+                <a href="submit-project.html" class="active">ส่งผลงาน</a>
             </div>
         </div>
     </nav>
@@ -32,10 +29,10 @@
     <!-- Hero Section -->
     <header id="hero" class="page-hero">
         <div class="container hero-content">
-            <div class="eyebrow" data-i18n="hero_eyebrow">AI FOR ALL HACKATHON 2026</div>
-            <h1 data-i18n="hero_title">Submit Form</h1>
-            <p class="subheadline" data-i18n="hero_subheadline">
-                Submit your team's Gen AI project here. Ensure all details are filled accurately.
+            <div class="eyebrow">THAILAND AI HACKATHON 2026</div>
+            <h1>ส่งผลงานโปรเจกต์ AI ของคุณ</h1>
+            <p class="subheadline">
+                ส่งโปรเจกต์ Gen AI ของทีมคุณที่นี่ โปรดตรวจสอบให้แน่ใจว่าข้อมูลทั้งหมดถูกต้อง
             </p>
         </div>
     </header>
@@ -48,52 +45,67 @@
 
                     <!-- Team Name -->
                     <div class="form-group">
-                        <label for="team_name" data-i18n="label_team_name">Team Name</label>
-                        <input type="text" id="team_name" name="team_name" placeholder="Enter team name" required>
+                        <label for="team_name">ชื่อทีม</label>
+                        <input type="text" id="team_name" name="team_name" placeholder="กรอกชื่อทีม" required>
                     </div>
 
-                    <!-- Contact Email -->
+                    <!-- Email Contact -->
                     <div class="form-group">
-                        <label for="email" data-i18n="label_email">Contact Email (Leader)</label>
+                        <label for="email">อีเมลติดต่อ (หัวหน้าทีม)</label>
                         <input type="email" id="email" name="email" placeholder="teamleader@example.com" required>
                     </div>
 
                     <!-- Team Members -->
                     <div class="form-group">
-                        <label data-i18n="label_team_members">Team Members (Up to 5 members)</label>
+                        <label>สมาชิกในทีม (สูงสุด 5 คน)</label>
                         <div class="members-inputs">
-                            <input type="text" name="member_1" placeholder="Member 1 (Leader)" required>
-                            <input type="text" name="member_2" placeholder="Member 2">
-                            <input type="text" name="member_3" placeholder="Member 3">
-                            <input type="text" name="member_4" placeholder="Member 4">
-                            <input type="text" name="member_5" placeholder="Member 5">
+                            <input type="text" name="member_1" placeholder="สมาชิกคนที่ 1 (หัวหน้าทีม)" required>
+                            <input type="text" name="member_2" placeholder="สมาชิกคนที่ 2">
+                            <input type="text" name="member_3" placeholder="สมาชิกคนที่ 3">
+                            <input type="text" name="member_4" placeholder="สมาชิกคนที่ 4">
+                            <input type="text" name="member_5" placeholder="สมาชิกคนที่ 5">
                         </div>
                     </div>
 
                     <!-- Project Title -->
                     <div class="form-group">
-                        <label for="project_title" data-i18n="label_project_title">Title of Project</label>
-                        <input type="text" id="project_title" name="project_title" placeholder="Enter project title" required>
+                        <label for="project_title">ชื่อโปรเจกต์</label>
+                        <input type="text" id="project_title" name="project_title" placeholder="กรอกชื่อโปรเจกต์" required>
+                    </div>
+
+                    <!-- Project Theme Dropdown -->
+                    <div class="form-group">
+                        <label for="project_theme">ธีมหัวข้อโปรเจกต์ (Project Theme)</label>
+                        <select id="project_theme" name="project_theme" required class="form-select">
+                            <option value="" disabled selected>-- เลือกธีมหัวข้อโปรเจกต์ --</option>
+                            <option value="1. Education & Future Skills">1. Education & Future Skills (ยกระดับการศึกษา สร้างทักษะแห่งอนาคต)</option>
+                            <option value="2. SME & Local Economy">2. SME & Local Economy (เสริมพลัง SME ขับเคลื่อนเศรษฐกิจท้องถิ่น)</option>
+                            <option value="3. Agriculture & Food">3. Agriculture & Food (พลิกโฉมการเกษตร และอาหาร)</option>
+                            <option value="4. Health & Aging Society">4. Health & Aging Society (สร้างสุขภาพดี เพื่อชีวิตที่ดีทุกวัย)</option>
+                            <option value="5. Smart Mobility & Cities">5. Smart Mobility & Cities (พัฒนาการเดินทาง สร้างเมืองอัจฉริยะ)</option>
+                            <option value="6. Resilient Communities">6. Resilient Communities (สร้างชุมชนเข้มแข็งและยั่งยืน)</option>
+                        </select>
                     </div>
 
                     <!-- Description -->
                     <div class="form-group">
-                        <label for="project_description" data-i18n="label_project_desc">Description of Project (max 100 words)</label>
-                        <textarea id="project_description" name="project_description" rows="4" placeholder="Brief explanation of your AI solution..." required></textarea>
+                        <label for="project_description">คำอธิบายโปรเจกต์ (ไม่เกิน 100 คำ)</label>
+                        <textarea id="project_description" name="project_description" rows="4" placeholder="อธิบายแนวทางการแก้ปัญหาด้วย AI ของคุณโดยสังเขป..." required></textarea>
                     </div>
 
-                    <!-- URL / HTML File -->
+                    <!-- URL / Hosted Project -->
                     <div class="form-group">
-                        <label for="html_url" data-i18n="label_html_url">URL of HTML / Hosted Project</label>
-                        <input type="url" id="html_url" name="html_url" placeholder="https://your-project.vercel.app or GitHub link">
+                        <label for="html_url">URL ของโปรเจกต์ HTML / เว็บไซต์</label>
+                        <input type="url" id="html_url" name="html_url" placeholder="https://your-project.vercel.app หรือ ลิงก์ GitHub">
                     </div>
 
+                    <!-- Upload File -->
                     <div class="form-group">
-                        <label for="file_html" data-i18n="label_html_file">OR Upload HTML File</label>
+                        <label for="file_html">หรืออัปโหลดไฟล์ HTML</label>
                         <div class="file-input-wrapper">
                             <input type="file" id="file_html" name="file_html" accept=".html,.htm">
                             <label for="file_html" class="file-input-label">
-                                <span id="file-chosen-name" data-i18n="choose_file">Choose .html file</span>
+                                <span id="file-chosen-name">เลือกไฟล์ .html</span>
                             </label>
                         </div>
                     </div>
@@ -103,7 +115,7 @@
                         <label class="checkbox-container">
                             <input type="checkbox" id="confirm_nationality" name="confirm_nationality" required>
                             <span class="checkmark"></span>
-                            <span data-i18n="confirm_thai">We confirm that all team members are Thai nationality and above 18 years old.</span>
+                            <span>เราขอยืนยันว่าสมาชิกทุกคนในทีมมีสัญชาติไทยและมีอายุมากกว่า 18 ปี</span>
                         </label>
                     </div>
 
@@ -111,12 +123,13 @@
                         <label class="checkbox-container">
                             <input type="checkbox" id="confirm_truth" name="confirm_truth" required>
                             <span class="checkmark"></span>
-                            <span data-i18n="confirm_correct">We confirm that all information provided is true and correct.</span>
+                            <span>เราขอยืนยันว่าข้อมูลทั้งหมดที่ระบุเป็นความจริงและถูกต้อง</span>
                         </label>
                     </div>
 
+                    <!-- Submit Button -->
                     <button type="submit" class="btn-primary btn-submit" id="submit-btn">
-                        <span id="submit-btn-text" data-i18n="btn_submit">Submit Project</span>
+                        <span id="submit-btn-text">ส่งผลงาน</span>
                     </button>
 
                     <div id="form-message" class="form-message" role="status" aria-live="polite"></div>
