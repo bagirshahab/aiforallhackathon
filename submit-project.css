@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 :root {
     --true-red: #E60000;
     --true-dark-red: #B30000;
@@ -7,19 +11,30 @@
     --true-border: #1E293B;
     --true-text-light: #F8FAFC;
     --true-text-muted: #94A3B8;
-    --accent-yellow: #FF9900;
 }
 
 body {
-    background-color: #FFFFFF;
+    background-color: var(--true-bg-dark);
     color: var(--true-text-light);
     font-family: 'Inter', sans-serif;
     margin: 0;
 }
 
-/* Navigasi */
+/* Layout helpers (previously missing / relied on external styles.css) */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Navbar */
 #navbar {
-    background-color: #0A0E17;
+    background-color: rgba(10, 14, 23, 0.9);
+    backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--true-border);
     position: fixed;
     top: 0;
@@ -34,15 +49,22 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 1rem;
 }
 
 .logo-text {
     font-weight: 800;
     font-size: 1.25rem;
     letter-spacing: 1px;
+    white-space: nowrap;
     background: linear-gradient(90deg, var(--true-red), var(--true-cyan));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
 }
 
 .nav-links a {
@@ -50,6 +72,7 @@ body {
     text-decoration: none;
     margin: 0 1rem;
     font-weight: 500;
+    white-space: nowrap;
     transition: color 0.2s;
 }
 
@@ -84,14 +107,12 @@ body {
     color: #FFF;
 }
 
-/* Hero Section dengan Lis Oranye di Samping Kiri */
+/* Hero Section */
 .page-hero {
-    position: relative;
     padding-top: 8rem;
-    padding-bottom: 4rem;
+    padding-bottom: 2.5rem;
     text-align: center;
-    background-color: var(--true-bg-dark);
-    border-left: 6px solid var(--accent-yellow);
+    background: radial-gradient(circle at top, rgba(230, 0, 0, 0.15) 0%, transparent 70%);
 }
 
 .eyebrow {
@@ -106,7 +127,6 @@ body {
     font-size: 2.5rem;
     font-weight: 800;
     margin: 0.5rem 0;
-    color: #FFFFFF;
 }
 
 .subheadline {
@@ -116,22 +136,15 @@ body {
     font-size: 0.95rem;
 }
 
-/* Form Section dengan Background Putih */
-.section-light {
-    background-color: #FFFFFF;
-    padding: 3rem 0 5rem 0;
-}
-
-/* Form Card di Tengah dengan Latar Hitam/Gelap */
+/* Form Container */
 .form-card {
     max-width: 650px;
-    margin: 0 auto;
+    margin: 0 auto 4rem auto;
     padding: 2.5rem;
     background: var(--true-card-bg);
     border: 1px solid var(--true-border);
     border-radius: 12px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    color: var(--true-text-light);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .form-group {
@@ -196,6 +209,7 @@ body {
     color: var(--true-text-muted);
     font-size: 0.875rem;
     cursor: pointer;
+    text-align: center;
     transition: border-color 0.2s;
 }
 
@@ -228,10 +242,11 @@ body {
     accent-color: var(--true-red);
     width: 18px;
     height: 18px;
+    min-width: 18px;
     margin-top: 2px;
 }
 
-/* Button Submit */
+/* Button */
 .btn-submit {
     width: 100%;
     background: linear-gradient(90deg, var(--true-red), var(--true-dark-red));
@@ -277,9 +292,87 @@ body {
 }
 
 .footer-section {
-    background-color: var(--true-bg-dark);
     padding: 2rem 0;
     border-top: 1px solid var(--true-border);
     color: var(--true-text-muted);
     font-size: 0.8rem;
+}
+
+/* ===== Responsive: Tablet ===== */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 0.75rem 1rem;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.6rem;
+    }
+
+    .nav-links a {
+        margin: 0 0.6rem;
+        font-size: 0.9rem;
+    }
+
+    .page-hero {
+        padding-top: 8.5rem;
+        padding-bottom: 2rem;
+    }
+
+    .page-hero h1 {
+        font-size: 1.9rem;
+    }
+
+    .subheadline {
+        font-size: 0.9rem;
+    }
+
+    .form-card {
+        padding: 1.75rem 1.25rem;
+        margin: 0 1rem 3rem;
+        border-radius: 10px;
+    }
+}
+
+/* ===== Responsive: Mobile ===== */
+@media (max-width: 480px) {
+    .logo-text {
+        font-size: 1.05rem;
+    }
+
+    .lang-btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.7rem;
+    }
+
+    .page-hero h1 {
+        font-size: 1.6rem;
+    }
+
+    .eyebrow {
+        font-size: 0.75rem;
+        letter-spacing: 1.5px;
+    }
+
+    .subheadline {
+        font-size: 0.85rem;
+    }
+
+    .form-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .btn-submit {
+        font-size: 0.95rem;
+        padding: 0.9rem;
+    }
+
+    .file-input-label {
+        font-size: 0.8rem;
+        padding: 0.85rem;
+    }
 }
