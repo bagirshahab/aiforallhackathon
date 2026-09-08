@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fileChosenName = document.getElementById("file-chosen-name");
     const descInput = document.getElementById("project_description");
 
-    // Handling Language Switcher
+    // Language Switcher
     const langBtns = document.querySelectorAll(".lang-btn");
     langBtns.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -77,11 +77,14 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateLanguage(lang) {
         document.querySelectorAll("[data-i18n]").forEach(el => {
             const key = el.getAttribute("data-i18n");
-            if (i18n[lang] && i18n[lang][key]) {
+            if (i18n[lang][key]) {
                 el.textContent = i18n[lang][key];
             }
         });
     }
+
+    // Sync text on first load (default: English)
+    updateLanguage(currentLang);
 
     fileInput.addEventListener("change", () => {
         if (fileInput.files.length > 0) {
@@ -106,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const formData = new FormData(form);
 
-        // Kumpulkan anggota tim menjadi string
+        // Kumpulkan 5 anggota menjadi string berpisah koma
         const members = [
             form.querySelector('[name="member_1"]').value,
             form.querySelector('[name="member_2"]').value,
