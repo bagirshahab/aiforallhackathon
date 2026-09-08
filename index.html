@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -19,14 +19,13 @@
                 <span class="logo-text">AI HACKATHON</span>
             </div>
             <div class="nav-links">
-                <a href="index.html#about" data-i18n="nav_about">Tentang</a>
+                <a href="index.html#about" data-i18n="nav_about">About</a>
                 <a href="index.html#program" data-i18n="nav_program">Program</a>
-                <a href="submit-project.html" class="active" data-i18n="nav_submit">Submit Proyek</a>
+                <a href="submit-project.html" class="active" data-i18n="nav_submit">Submit Project</a>
             </div>
             <div class="nav-actions">
                 <div class="lang-switcher">
-                    <button type="button" class="lang-btn active" data-lang="id">ID</button>
-                    <button type="button" class="lang-btn" data-lang="en">EN</button>
+                    <button type="button" class="lang-btn active" data-lang="en">EN</button>
                     <button type="button" class="lang-btn" data-lang="th">TH</button>
                 </div>
             </div>
@@ -39,7 +38,7 @@
             <div class="eyebrow" data-i18n="hero_eyebrow">THAILAND AI HACKATHON 2026</div>
             <h1 data-i18n="hero_title">Submit Your AI Project</h1>
             <p class="subheadline" data-i18n="hero_subheadline">
-                Kirimkan proyek inovasi Gen AI tim kamu di sini. Pastikan seluruh informasi terisi dengan benar.
+                Submit your team's Gen AI project here. Ensure all details are filled accurately.
             </p>
         </div>
     </header>
@@ -56,13 +55,13 @@
                         <input type="text" id="team_name" name="team_name" placeholder="Enter team name" required>
                     </div>
 
-                    <!-- Email Contact (Required for Resend notification) -->
+                    <!-- Email Contact -->
                     <div class="form-group">
-                        <label for="email" data-i18n="label_email">Contact Email</label>
+                        <label for="email" data-i18n="label_email">Contact Email (Leader)</label>
                         <input type="email" id="email" name="email" placeholder="teamleader@example.com" required>
                     </div>
 
-                    <!-- Team Members (Dropdown 5 Lines) -->
+                    <!-- Team Members (5 Lines) -->
                     <div class="form-group">
                         <label data-i18n="label_team_members">Team Members (Up to 5 members)</label>
                         <div class="members-inputs">
@@ -86,18 +85,19 @@
                         <textarea id="project_description" name="project_description" rows="4" placeholder="Brief explanation of your AI solution..." required></textarea>
                     </div>
 
-                    <!-- URL / HTML File -->
+                    <!-- URL / Hosted Project -->
                     <div class="form-group">
                         <label for="html_url" data-i18n="label_html_url">URL of HTML / Hosted Project</label>
                         <input type="url" id="html_url" name="html_url" placeholder="https://your-project.vercel.app or GitHub link">
                     </div>
 
+                    <!-- Upload File -->
                     <div class="form-group">
                         <label for="file_html" data-i18n="label_html_file">OR Upload HTML File</label>
                         <div class="file-input-wrapper">
                             <input type="file" id="file_html" name="file_html" accept=".html,.htm">
                             <label for="file_html" class="file-input-label">
-                                <span id="file-chosen-name" data-i18n="choose_file">Pilih file .html</span>
+                                <span id="file-chosen-name" data-i18n="choose_file">Choose .html file</span>
                             </label>
                         </div>
                     </div>
@@ -119,6 +119,7 @@
                         </label>
                     </div>
 
+                    <!-- Submit Button -->
                     <button type="submit" class="btn-primary btn-submit" id="submit-btn">
                         <span id="submit-btn-text" data-i18n="btn_submit">Submit Project</span>
                     </button>
