@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hackathon — Project Submission</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="submit-project.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navigasi -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <span class="logo-text">AI HACKATHON</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html#about" data-i18n="nav_about">Tentang</a>
+                <a href="index.html#program" data-i18n="nav_program">Program</a>
+                <a href="submit-project.html" class="active" data-i18n="nav_submit">Submit Proyek</a>
+            </div>
+            <div class="nav-actions">
+                <div class="lang-switcher">
+                    <button type="button" class="lang-btn active" data-lang="id">ID</button>
+                    <button type="button" class="lang-btn" data-lang="en">EN</button>
+                    <button type="button" class="lang-btn" data-lang="th">TH</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero" class="page-hero">
+        <div class="container hero-content">
+            <div class="eyebrow" data-i18n="hero_eyebrow">THAILAND AI HACKATHON 2026</div>
+            <h1 data-i18n="hero_title">Submit Your AI Project</h1>
+            <p class="subheadline" data-i18n="hero_subheadline">
+                Kirimkan proyek inovasi Gen AI tim kamu di sini. Pastikan seluruh informasi terisi dengan benar.
+            </p>
+        </div>
+    </header>
+
+    <!-- Form Section -->
+    <section id="form-proyek" class="section-light">
+        <div class="container">
+            <div class="form-card card">
+                <form id="hackathon-form" novalidate>
+
+                    <!-- Team Name -->
+                    <div class="form-group">
+                        <label for="team_name" data-i18n="label_team_name">Team Name</label>
+                        <input type="text" id="team_name" name="team_name" placeholder="Enter team name" required>
+                    </div>
+
+                    <!-- Email Contact (Required for Resend notification) -->
+                    <div class="form-group">
+                        <label for="email" data-i18n="label_email">Contact Email</label>
+                        <input type="email" id="email" name="email" placeholder="teamleader@example.com" required>
+                    </div>
+
+                    <!-- Team Members (Dropdown 5 Lines) -->
+                    <div class="form-group">
+                        <label data-i18n="label_team_members">Team Members (Up to 5 members)</label>
+                        <div class="members-inputs">
+                            <input type="text" name="member_1" placeholder="Member 1 (Leader)" required>
+                            <input type="text" name="member_2" placeholder="Member 2">
+                            <input type="text" name="member_3" placeholder="Member 3">
+                            <input type="text" name="member_4" placeholder="Member 4">
+                            <input type="text" name="member_5" placeholder="Member 5">
+                        </div>
+                    </div>
+
+                    <!-- Project Title -->
+                    <div class="form-group">
+                        <label for="project_title" data-i18n="label_project_title">Title of Project</label>
+                        <input type="text" id="project_title" name="project_title" placeholder="Enter project title" required>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="project_description" data-i18n="label_project_desc">Description of Project (max 100 words)</label>
+                        <textarea id="project_description" name="project_description" rows="4" placeholder="Brief explanation of your AI solution..." required></textarea>
+                    </div>
+
+                    <!-- URL / HTML File -->
+                    <div class="form-group">
+                        <label for="html_url" data-i18n="label_html_url">URL of HTML / Hosted Project</label>
+                        <input type="url" id="html_url" name="html_url" placeholder="https://your-project.vercel.app or GitHub link">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="file_html" data-i18n="label_html_file">OR Upload HTML File</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="file_html" name="file_html" accept=".html,.htm">
+                            <label for="file_html" class="file-input-label">
+                                <span id="file-chosen-name" data-i18n="choose_file">Pilih file .html</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Checkboxes -->
+                    <div class="checkbox-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="confirm_nationality" name="confirm_nationality" required>
+                            <span class="checkmark"></span>
+                            <span data-i18n="confirm_thai">We confirm that all team members are Thai nationality and above 18 years old.</span>
+                        </label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="confirm_truth" name="confirm_truth" required>
+                            <span class="checkmark"></span>
+                            <span data-i18n="confirm_correct">We confirm that all information provided is true and correct.</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-primary btn-submit" id="submit-btn">
+                        <span id="submit-btn-text" data-i18n="btn_submit">Submit Project</span>
+                    </button>
+
+                    <div id="form-message" class="form-message" role="status" aria-live="polite"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="container text-center">
+            <p class="copyright">© 2026 AI Hackathon Thailand. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="submit-project.js"></script>
+</body>
+
+</html>
