@@ -3,113 +3,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI For All Hackathon - Submit Project</title>
+  <title>Submit Your Project - Thailand AI Hackathon</title>
   <link rel="stylesheet" href="submit-project.css" />
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="submit-project.js" defer></script>
 </head>
 <body>
+  
+  <div class="background-overlay"></div>
 
-  <!-- Header / Navigation -->
-  <header class="navbar">
-    <div class="nav-container">
-      <a href="#" class="logo">
-        <span>AI FOR ALL HACKATHON</span>
-      </a>
-      
-      <!-- Language Selector (English & Thailand Only) -->
-      <div class="lang-selector">
-        <button id="lang-en" class="lang-btn active" onclick="switchLanguage('en')">EN</button>
-        <span class="lang-divider">|</span>
-        <button id="lang-th" class="lang-btn" onclick="switchLanguage('th')">TH</button>
+  <div class="main-container">
+    <header class="navbar">
+      <div class="logo">
+        <a href="https://aiforallhackathon.com/">
+          <!-- Ganti logo dengan logo mandiri jika perlu, atau hapus dan gunakan teks -->
+          <img src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=400,fit=crop,q=80/A62v8kXpEXubM7w2/white-2-AVLPXexYyMTw9vrl.png" alt="Thailand AI Hackathon Logo">
+        </a>
       </div>
-    </div>
-  </header>
+      
+      <!-- NAV MENU (Hanya tersisa bagian kanan/bahasa) -->
+      <nav class="nav-links">
+        <div class="nav-right">
+          <div class="lang-selector">
+            <button id="lang-en" class="lang-btn active" onclick="switchLanguage('en')">EN</button>
+            <span class="lang-divider">|</span>
+            <button id="lang-th" class="lang-btn" onclick="switchLanguage('th')">TH</button>
+            <!-- Bahasa ID sudah dihapus -->
+          </div>
+          <!-- Tombol login dihapus karena ini halaman submit -->
+        </div>
+      </nav>
+    </header>
 
-  <!-- Main Container -->
-  <main class="container">
-    <div class="form-wrapper">
-      <div class="form-header">
-        <h1 id="title-text">Submit Your Project</h1>
-        <p id="subtitle-text">Fill in the form below to register your team and project for the AI For All Hackathon.</p>
+    <main class="content-wrapper">
+      <div class="hero-section">
+        <h1 id="page-title">Submit Your Project</h1>
+        <p class="subtitle" id="page-subtitle">Fill in the form below to submit your team's project for the Thailand AI Hackathon.</p>
       </div>
 
-      <form id="submission-form" novalidate>
-        
-        <!-- Team Information -->
-        <div class="form-section">
-          <h2 class="section-title" id="sec-team-title">1. Team Information</h2>
-          
-          <div class="form-group">
-            <label for="teamName" id="lbl-teamName">Team Name *</label>
-            <input type="text" id="teamName" name="teamName" required placeholder="e.g. AI Innovators" />
+      <div class="form-container">
+        <form id="submission-form" novalidate>
+          <div class="form-grid">
+            
+            <!-- Section 1: Team Info -->
+            <div class="form-section full-width">
+              <h2 id="sec-team-title">1. Team Information</h2>
+            </div>
+
+            <div class="form-group half-width">
+              <label for="teamName" id="lbl-teamName">Team Name *</label>
+              <input type="text" id="teamName" name="teamName" required placeholder="e.g., AI Innovators" />
+            </div>
+
+            <div class="form-group half-width">
+              <label for="leaderName" id="lbl-leaderName">Team Leader Name *</label>
+              <input type="text" id="leaderName" name="leaderName" required placeholder="Full Name" />
+            </div>
+
+            <div class="form-group half-width">
+              <label for="email" id="lbl-email">Leader Email *</label>
+              <input type="email" id="email" name="email" required placeholder="leader@example.com" />
+            </div>
+
+            <div class="form-group half-width">
+              <label for="phone" id="lbl-phone">WhatsApp / Phone Number *</label>
+              <input type="tel" id="phone" name="phone" required placeholder="+66 1234 5678" />
+            </div>
+
+            <!-- Section 2: Project Info -->
+            <div class="form-section full-width">
+              <h2 id="sec-project-title">2. Project Details</h2>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="projectName" id="lbl-projectName">Project Title *</label>
+              <input type="text" id="projectName" name="projectName" required placeholder="Project Title" />
+            </div>
+
+            <div class="form-group full-width">
+              <label for="track" id="lbl-track">Category / Track *</label>
+              <select id="track" name="track" required>
+                <option value="" disabled selected id="opt-track-default">Select Category</option>
+                <option value="Healthcare">Healthcare AI</option>
+                <option value="Education">Education & Learning</option>
+                <option value="Sustainability">Green & Sustainability</option>
+                <option value="Open Innovation">Open Innovation</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="description" id="lbl-description">Project Description *</label>
+              <textarea id="description" name="description" rows="5" required placeholder="Briefly describe your project, the problem it solves, and the technology used..."></textarea>
+            </div>
+
+            <div class="form-group half-width">
+              <label for="repoUrl" id="lbl-repoUrl">Repository URL (GitHub / GitLab) *</label>
+              <input type="url" id="repoUrl" name="repoUrl" required placeholder="https://github.com/username/project" />
+            </div>
+
+            <div class="form-group half-width">
+              <label for="demoUrl" id="lbl-demoUrl">Demo / Video Link (Optional)</label>
+              <input type="url" id="demoUrl" name="demoUrl" placeholder="https://..." />
+            </div>
+
           </div>
 
-          <div class="form-group">
-            <label for="leaderName" id="lbl-leaderName">Team Leader Name *</label>
-            <input type="text" id="leaderName" name="leaderName" required placeholder="Full Name" />
+          <div class="form-actions">
+            <button type="submit" id="btn-submit">Submit Project</button>
           </div>
+        </form>
+        <div id="response-message" class="hidden"></div>
+      </div>
+    </main>
 
-          <div class="form-group">
-            <label for="email" id="lbl-email">Leader Email *</label>
-            <input type="email" id="email" name="email" required placeholder="leader@example.com" />
-          </div>
+  </div>
 
-          <div class="form-group">
-            <label for="phone" id="lbl-phone">WhatsApp / Phone Number *</label>
-            <input type="tel" id="phone" name="phone" required placeholder="+66 / +62..." />
-          </div>
-        </div>
-
-        <!-- Project Details -->
-        <div class="form-section">
-          <h2 class="section-title" id="sec-project-title">2. Project Details</h2>
-
-          <div class="form-group">
-            <label for="projectName" id="lbl-projectName">Project Title *</label>
-            <input type="text" id="projectName" name="projectName" required placeholder="Project Title" />
-          </div>
-
-          <div class="form-group">
-            <label for="track" id="lbl-track">Category / Track *</label>
-            <select id="track" name="track" required>
-              <option value="" disabled selected id="opt-track-default">Select Category</option>
-              <option value="Healthcare">Healthcare AI</option>
-              <option value="Education">Education & Learning</option>
-              <option value="Sustainability">Green & Sustainability</option>
-              <option value="Open Innovation">Open Innovation</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="description" id="lbl-description">Project Description *</label>
-            <textarea id="description" name="description" rows="4" required placeholder="Briefly describe your project, problem solved, and technology used..."></textarea>
-          </div>
-
-          <div class="form-group">
-            <label for="repoUrl" id="lbl-repoUrl">Repository URL (GitHub / GitLab) *</label>
-            <input type="url" id="repoUrl" name="repoUrl" required placeholder="https://github.com/username/project" />
-          </div>
-
-          <div class="form-group">
-            <label for="demoUrl" id="lbl-demoUrl">Demo / Video Link (Optional)</label>
-            <input type="url" id="demoUrl" name="demoUrl" placeholder="https://..." />
-          </div>
-        </div>
-
-        <!-- Submit Button -->
-        <div class="form-actions">
-          <button type="submit" id="btn-submit" class="submit-btn">Submit Project</button>
-        </div>
-
-      </form>
-      
-      <div id="response-message" class="response-message hidden"></div>
-    </div>
-  </main>
-
-  <script src="submit-project.js"></script>
 </body>
 </html>
