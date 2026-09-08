@@ -1,121 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Submit Your Project - Thailand AI Hackathon</title>
-  <link rel="stylesheet" href="submit-project.css" />
-  <script src="submit-project.js" defer></script>
-</head>
-<body>
-  
-  <div class="background-overlay"></div>
+<html lang="id">
 
-  <div class="main-container">
-    <header class="navbar">
-      <div class="logo">
-        <a href="https://aiforallhackathon.com/">
-          <!-- Ganti logo dengan logo mandiri jika perlu, atau hapus dan gunakan teks -->
-          <img src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=400,fit=crop,q=80/A62v8kXpEXubM7w2/white-2-AVLPXexYyMTw9vrl.png" alt="Thailand AI Hackathon Logo">
-        </a>
-      </div>
-      
-      <!-- NAV MENU (Hanya tersisa bagian kanan/bahasa) -->
-      <nav class="nav-links">
-        <div class="nav-right">
-          <div class="lang-selector">
-            <button id="lang-en" class="lang-btn active" onclick="switchLanguage('en')">EN</button>
-            <span class="lang-divider">|</span>
-            <button id="lang-th" class="lang-btn" onclick="switchLanguage('th')">TH</button>
-            <!-- Bahasa ID sudah dihapus -->
-          </div>
-          <!-- Tombol login dihapus karena ini halaman submit -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hackathon — Project Submission</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="submit-project.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navigasi -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <span class="logo-text">AI HACKATHON</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html#about" data-i18n="nav_about">Tentang</a>
+                <a href="index.html#program" data-i18n="nav_program">Program</a>
+                <a href="submit-project.html" class="active" data-i18n="nav_submit">Submit Proyek</a>
+            </div>
+            <div class="nav-actions">
+                <div class="lang-switcher">
+                    <button type="button" class="lang-btn active" data-lang="id">ID</button>
+                    <button type="button" class="lang-btn" data-lang="en">EN</button>
+                    <button type="button" class="lang-btn" data-lang="th">TH</button>
+                </div>
+            </div>
         </div>
-      </nav>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero" class="page-hero">
+        <div class="container hero-content">
+            <div class="eyebrow" data-i18n="hero_eyebrow">THAILAND AI HACKATHON 2026</div>
+            <h1 data-i18n="hero_title">Submit Your AI Project</h1>
+            <p class="subheadline" data-i18n="hero_subheadline">
+                Kirimkan proyek inovasi Gen AI tim kamu di sini. Pastikan seluruh informasi terisi dengan benar.
+            </p>
+        </div>
     </header>
 
-    <main class="content-wrapper">
-      <div class="hero-section">
-        <h1 id="page-title">Submit Your Project</h1>
-        <p class="subtitle" id="page-subtitle">Fill in the form below to submit your team's project for the Thailand AI Hackathon.</p>
-      </div>
+    <!-- Form Section -->
+    <section id="form-proyek" class="section-light">
+        <div class="container">
+            <div class="form-card card">
+                <form id="hackathon-form" novalidate>
 
-      <div class="form-container">
-        <form id="submission-form" novalidate>
-          <div class="form-grid">
-            
-            <!-- Section 1: Team Info -->
-            <div class="form-section full-width">
-              <h2 id="sec-team-title">1. Team Information</h2>
+                    <!-- Team Name -->
+                    <div class="form-group">
+                        <label for="team_name" data-i18n="label_team_name">Team Name</label>
+                        <input type="text" id="team_name" name="team_name" placeholder="Enter team name" required>
+                    </div>
+
+                    <!-- Email Contact (Required for Resend notification) -->
+                    <div class="form-group">
+                        <label for="email" data-i18n="label_email">Contact Email</label>
+                        <input type="email" id="email" name="email" placeholder="teamleader@example.com" required>
+                    </div>
+
+                    <!-- Team Members (Dropdown 5 Lines) -->
+                    <div class="form-group">
+                        <label data-i18n="label_team_members">Team Members (Up to 5 members)</label>
+                        <div class="members-inputs">
+                            <input type="text" name="member_1" placeholder="Member 1 (Leader)" required>
+                            <input type="text" name="member_2" placeholder="Member 2">
+                            <input type="text" name="member_3" placeholder="Member 3">
+                            <input type="text" name="member_4" placeholder="Member 4">
+                            <input type="text" name="member_5" placeholder="Member 5">
+                        </div>
+                    </div>
+
+                    <!-- Project Title -->
+                    <div class="form-group">
+                        <label for="project_title" data-i18n="label_project_title">Title of Project</label>
+                        <input type="text" id="project_title" name="project_title" placeholder="Enter project title" required>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="project_description" data-i18n="label_project_desc">Description of Project (max 100 words)</label>
+                        <textarea id="project_description" name="project_description" rows="4" placeholder="Brief explanation of your AI solution..." required></textarea>
+                    </div>
+
+                    <!-- URL / HTML File -->
+                    <div class="form-group">
+                        <label for="html_url" data-i18n="label_html_url">URL of HTML / Hosted Project</label>
+                        <input type="url" id="html_url" name="html_url" placeholder="https://your-project.vercel.app or GitHub link">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="file_html" data-i18n="label_html_file">OR Upload HTML File</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="file_html" name="file_html" accept=".html,.htm">
+                            <label for="file_html" class="file-input-label">
+                                <span id="file-chosen-name" data-i18n="choose_file">Pilih file .html</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Checkboxes -->
+                    <div class="checkbox-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="confirm_nationality" name="confirm_nationality" required>
+                            <span class="checkmark"></span>
+                            <span data-i18n="confirm_thai">We confirm that all team members are Thai nationality and above 18 years old.</span>
+                        </label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="confirm_truth" name="confirm_truth" required>
+                            <span class="checkmark"></span>
+                            <span data-i18n="confirm_correct">We confirm that all information provided is true and correct.</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-primary btn-submit" id="submit-btn">
+                        <span id="submit-btn-text" data-i18n="btn_submit">Submit Project</span>
+                    </button>
+
+                    <div id="form-message" class="form-message" role="status" aria-live="polite"></div>
+                </form>
             </div>
+        </div>
+    </section>
 
-            <div class="form-group half-width">
-              <label for="teamName" id="lbl-teamName">Team Name *</label>
-              <input type="text" id="teamName" name="teamName" required placeholder="e.g., AI Innovators" />
-            </div>
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="container text-center">
+            <p class="copyright">© 2026 AI Hackathon Thailand. All rights reserved.</p>
+        </div>
+    </footer>
 
-            <div class="form-group half-width">
-              <label for="leaderName" id="lbl-leaderName">Team Leader Name *</label>
-              <input type="text" id="leaderName" name="leaderName" required placeholder="Full Name" />
-            </div>
-
-            <div class="form-group half-width">
-              <label for="email" id="lbl-email">Leader Email *</label>
-              <input type="email" id="email" name="email" required placeholder="leader@example.com" />
-            </div>
-
-            <div class="form-group half-width">
-              <label for="phone" id="lbl-phone">WhatsApp / Phone Number *</label>
-              <input type="tel" id="phone" name="phone" required placeholder="+66 1234 5678" />
-            </div>
-
-            <!-- Section 2: Project Info -->
-            <div class="form-section full-width">
-              <h2 id="sec-project-title">2. Project Details</h2>
-            </div>
-
-            <div class="form-group full-width">
-              <label for="projectName" id="lbl-projectName">Project Title *</label>
-              <input type="text" id="projectName" name="projectName" required placeholder="Project Title" />
-            </div>
-
-            <div class="form-group full-width">
-              <label for="track" id="lbl-track">Category / Track *</label>
-              <select id="track" name="track" required>
-                <option value="" disabled selected id="opt-track-default">Select Category</option>
-                <option value="Healthcare">Healthcare AI</option>
-                <option value="Education">Education & Learning</option>
-                <option value="Sustainability">Green & Sustainability</option>
-                <option value="Open Innovation">Open Innovation</option>
-              </select>
-            </div>
-
-            <div class="form-group full-width">
-              <label for="description" id="lbl-description">Project Description *</label>
-              <textarea id="description" name="description" rows="5" required placeholder="Briefly describe your project, the problem it solves, and the technology used..."></textarea>
-            </div>
-
-            <div class="form-group half-width">
-              <label for="repoUrl" id="lbl-repoUrl">Repository URL (GitHub / GitLab) *</label>
-              <input type="url" id="repoUrl" name="repoUrl" required placeholder="https://github.com/username/project" />
-            </div>
-
-            <div class="form-group half-width">
-              <label for="demoUrl" id="lbl-demoUrl">Demo / Video Link (Optional)</label>
-              <input type="url" id="demoUrl" name="demoUrl" placeholder="https://..." />
-            </div>
-
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" id="btn-submit">Submit Project</button>
-          </div>
-        </form>
-        <div id="response-message" class="hidden"></div>
-      </div>
-    </main>
-
-  </div>
-
+    <script src="submit-project.js"></script>
 </body>
+
 </html>
