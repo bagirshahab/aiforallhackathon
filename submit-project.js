@@ -2,33 +2,7 @@ const API_URL = "https://pindai-hackathon-api.vercel.app/api/submit";
 
 // Dictionary 3 Bahasa
 const i18n = {
-    id: {
-        nav_about: "Tentang",
-        nav_program: "Program",
-        nav_submit: "Submit Proyek",
-        hero_eyebrow: "THAILAND AI HACKATHON 2026",
-        hero_title: "Submit Proyek AI Kamu",
-        hero_subheadline: "Kirimkan proyek inovasi Gen AI tim kamu di sini. Pastikan seluruh informasi terisi dengan benar.",
-        label_team_name: "Nama Tim",
-        label_email: "Email Kontak (Leader)",
-        label_team_members: "Anggota Tim (Maksimal 5 Orang)",
-        label_project_title: "Judul Proyek",
-        label_project_desc: "Deskripsi Proyek (Maksimal 100 Kata)",
-        label_html_url: "URL / Link Proyek HTML",
-        label_html_file: "ATAU Upload File HTML",
-        choose_file: "Pilih file .html",
-        confirm_thai: "Kami mengonfirmasi bahwa seluruh anggota tim berkewarganegaraan Thailand dan berusia di atas 18 tahun.",
-        confirm_correct: "Kami mengonfirmasi bahwa seluruh informasi yang diberikan adalah benar dan akurat.",
-        btn_submit: "Kirim Proyek",
-        sending: "Mengirim...",
-        err_words: "Deskripsi melebihi batas maksimal 100 kata.",
-        err_file_size: "Ukuran file maksimal 5MB.",
-        err_connect: "Gagal terhubung ke server. Silakan coba lagi.",
-        success_msg: "Proyek berhasil dikirim! Cek email kamu untuk konfirmasi."
-    },
     en: {
-        nav_about: "About",
-        nav_program: "Program",
         nav_submit: "Submit Project",
         hero_eyebrow: "THAILAND AI HACKATHON 2026",
         hero_title: "Submit Your AI Project",
@@ -51,8 +25,6 @@ const i18n = {
         success_msg: "Project submitted successfully! Check your email for confirmation."
     },
     th: {
-        nav_about: "เกี่ยวกับ",
-        nav_program: "โปรแกรม",
         nav_submit: "ส่งผลงาน",
         hero_eyebrow: "THAILAND AI HACKATHON 2026",
         hero_title: "ส่งผลงานโปรเจกต์ AI ของคุณ",
