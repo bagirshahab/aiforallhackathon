@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hackathon — Post-Training Feedback</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="submit-project.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Navigasi -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <span class="logo-text">AI FOR ALL HACKATHON</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">ส่งผลงาน</a>
+                <a href="formfeedback.html" class="active">แบบฟอร์มประเมิน</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero" class="page-hero">
+        <div class="container hero-content">
+            <div class="eyebrow">AI FOR ALL HACKATHON 2026</div>
+            <h1>แบบสอบถามความคิดเห็นหลังการอบรม</h1>
+            <p class="subheadline">
+                AI FOR ALL Hackathon — Post-Training Feedback Form<br>
+                กรุณาให้คะแนนหัวข้อต่อไปนี้ในระดับ 1–5 (Please rate the following on a scale of 1–5)
+            </p>
+        </div>
+    </header>
+
+    <!-- Form Section -->
+    <section id="form-proyek" class="section-light">
+        <div class="container">
+            <div class="form-card card">
+                <form id="feedback-form" novalidate>
+
+                    <!-- Participant Name -->
+                    <div class="form-group">
+                        <label for="full_name">ชื่อ - นามสกุล</label>
+                        <input type="text" id="full_name" name="full_name" placeholder="กรอกชื่อ-นามสกุลของคุณ" required>
+                    </div>
+
+                    <!-- Email Contact -->
+                    <div class="form-group">
+                        <label for="email">อีเมลติดต่อ</label>
+                        <input type="email" id="email" name="email" placeholder="yourname@example.com" required>
+                    </div>
+
+                    <!-- Question 1 -->
+                    <div class="form-group">
+                        <label>1. How clear and easy to follow was today's training session?<br><strong>วันนี้เนื้อหาการอบรมมีความชัดเจนและเข้าใจง่ายเพียงใด?</strong></label>
+                        <select name="q1_score" required class="form-select">
+                            <option value="" disabled selected>-- เลือกคะแนน (1-5) --</option>
+                            <option value="1">1 = Very confusing / สับสนมาก</option>
+                            <option value="2">2 = Somewhat confusing / ค่อนข้างสับสน</option>
+                            <option value="3">3 = Neutral / เฉยๆ</option>
+                            <option value="4">4 = Clear / ชัดเจน</option>
+                            <option value="5">5 = Very clear / ชัดเจนมาก</option>
+                        </select>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="form-group">
+                        <label>2. Overall, how would you rate your experience using Amazon Quick as an AI tool?<br><strong>โดยรวมแล้ว คุณให้คะแนนประสบการณ์การใช้งาน Amazon Quick ในฐานะเครื่องมือ AI อย่างไร?</strong></label>
+                        <select name="q2_score" required class="form-select">
+                            <option value="" disabled selected>-- เลือกคะแนน (1-5) --</option>
+                            <option value="1">1 = Poor / แย่</option>
+                            <option value="2">2 = Below average / ต่ำกว่าค่าเฉลี่ย</option>
+                            <option value="3">3 = Average / ปานกลาง</option>
+                            <option value="4">4 = Good / ดี</option>
+                            <option value="5">5 = Excellent / ดีเยี่ยม</option>
+                        </select>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="form-group">
+                        <label>3. How much do you agree that AI FOR ALL Hackathon is a meaningful way to address Thailand's challenges and build the country's AI talent?<br><strong>คุณเห็นด้วยมากน้อยเพียงใดว่า AI FOR ALL Hackathon เป็นแนวทางที่มีความหมายในการรับมือกับความท้าทายของประเทศไทย และสร้างบุคลากรด้าน AI ให้กับประเทศ?</strong></label>
+                        <select name="q3_score" required class="form-select">
+                            <option value="" disabled selected>-- เลือกคะแนน (1-5) --</option>
+                            <option value="1">1 = Strongly disagree / ไม่เห็นด้วยอย่างยิ่ง</option>
+                            <option value="2">2 = Disagree / ไม่เห็นด้วย</option>
+                            <option value="3">3 = Neutral / เฉยๆ</option>
+                            <option value="4">4 = Agree / เห็นด้วย</option>
+                            <option value="5">5 = Strongly agree / เห็นด้วยอย่างยิ่ง</option>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-primary btn-submit" id="submit-btn">
+                        <span id="submit-btn-text">ส่งแบบ评估 / Submit Feedback</span>
+                    </button>
+
+                    <div id="form-message" class="form-message" role="status" aria-live="polite"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="container text-center">
+            <p class="copyright">© 2026 AI For All Hackathon. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="formfeedback.js"></script>
+</body>
+
+</html>
