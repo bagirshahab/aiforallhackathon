@@ -11,6 +11,11 @@ const MSG = {
     btn_submit: "ส่งผลงาน / Submit",
     err_words: "คำอธิบายเกินขีดจำกัด 100 คำ / Description exceeds the 100-word limit.",
     err_theme: "กรุณาเลือกธีมหัวข้อโปรเจกต์ / Please select a project theme.",
+    err_required: "กรุณากรอกข้อมูลให้ครบทุกช่อง / Please fill in all required fields.",
+    err_member: "กรุณากรอกสมาชิกอย่างน้อย 1 คน (หัวหน้าทีม) / Please enter at least 1 team member (Leader).",
+    err_file_html: "กรุณาอัปโหลดไฟล์ HTML / Please upload an HTML file.",
+    err_file_md: "กรุณาอัปโหลดไฟล์ Markdown (.md) / Please upload a Markdown (.md) file.",
+    err_checkbox: "กรุณายืนยันเงื่อนไขทั้งหมด / Please confirm all the conditions.",
     err_connect: "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองอีกครั้ง / Cannot connect to the server. Please try again.",
     err_email: "กรุณากรอกอีเมลที่ถูกต้อง / Please enter a valid email address.",
     err_not_verified: "กรุณายืนยันอีเมลก่อนส่งผลงาน / Please verify your email before submitting.",
@@ -55,6 +60,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Modal elements
     const successModal = document.getElementById("success-modal");
     const successModalClose = document.getElementById("success-modal-close");
+
+    // Guard: jika elemen verifikasi OTP tidak ditemukan, berarti HTML belum diperbarui.
+    // Hentikan setup verifikasi agar script tidak crash dan form tetap bisa diisi.
+    if (!verifyBtn || !confirmOtpBtn || !otpBlock || !otpInput) {
+        console.error("Elemen verifikasi OTP tidak ditemukan. Pastikan index.html sudah diperbarui.");
+        if (submitBtn) submitBtn.disabled = false; // jangan kunci form kalau UI verifikasi belum ada
+        return;
+    }
 
     // State
     let verifiedEmail = null; // email yang sudah lolos verifikasi OTP
@@ -200,14 +213,49 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // Field teks wajib: team name, project title, description
+        const teamName = form.querySelector('[name="team_name"]').value.trim();
+        const projectTitle = form.querySelector('[name="project_title"]').value.trim();
+        const description = descInput.value.trim();
+
+        if (!teamName || !projectTitle || !description) {
+            showMessage(MSG.err_required, "error");
+            return;
+        }
+
         if (!themeSelect.value) {
             showMessage(MSG.err_theme, "error");
             return;
         }
 
-        const wordCount = descInput.value.trim().split(/\s+/).filter(Boolean).length;
+        // Team members: minimal member_1 (leader) wajib, sisanya opsional
+        const member1 = form.querySelector('[name="member_1"]').value.trim();
+        if (!member1) {
+            showMessage(MSG.err_member, "error");
+            return;
+        }
+
+        const wordCount = description.split(/\s+/).filter(Boolean).length;
         if (wordCount > 100) {
             showMessage(MSG.err_words, "error");
+            return;
+        }
+
+        // File HTML dan MD wajib diunggah
+        if (!fileInput.files || fileInput.files.length === 0) {
+            showMessage(MSG.err_file_html, "error");
+            return;
+        }
+        if (!mdInput.files || mdInput.files.length === 0) {
+            showMessage(MSG.err_file_md, "error");
+            return;
+        }
+
+        // Kedua checkbox konfirmasi wajib dicentang
+        const confirmNat = document.getElementById("confirm_nationality");
+        const confirmTruth = document.getElementById("confirm_truth");
+        if (!confirmNat.checked || !confirmTruth.checked) {
+            showMessage(MSG.err_checkbox, "error");
             return;
         }
 
@@ -256,6 +304,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ---- Modal ----
     function openModal() {
+        if (!successModal) {
+            // Fallback jika markup modal belum ada di halaman
+            showMessage(MSG.verify_sent ? "ส่งผลงานสำเร็จ! / Submission successful!" : "OK", "success");
+            return;
+        }
         successModal.hidden = false;
         // Force reflow agar animasi berjalan
         void successModal.offsetWidth;
@@ -264,16 +317,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function closeModal() {
+        if (!successModal) return;
         successModal.classList.remove("visible");
         document.body.style.overflow = "";
         setTimeout(() => { successModal.hidden = true; }, 300);
     }
 
-    successModalClose.addEventListener("click", closeModal);
-    successModal.querySelector(".success-modal-backdrop").addEventListener("click", closeModal);
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && !successModal.hidden) closeModal();
-    });
+    if (successModalClose) {
+        successModalClose.addEventListener("click", closeModal);
+    }
+    if (successModal) {
+        const backdrop = successModal.querySelector(".success-modal-backdrop");
+        if (backdrop) backdrop.addEventListener("click", closeModal);
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && !successModal.hidden) closeModal();
+        });
+    }
 
     // ---- Helpers ----
     function setLoading(isLoading) {
