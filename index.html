@@ -13,17 +13,17 @@
 <body>
 
     <!-- Navigasi -->
-   <nav id="navbar">
-    <div class="nav-container">
-        <div class="brand">
-            <span class="logo-text">AI FOR ALL HACKATHON</span>
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <span class="logo-text">AI FOR ALL HACKATHON</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="active">ส่งผลงาน</a>
+                <a href="formfeedback.html">แบบฟอร์มประเมิน</a>
+            </div>
         </div>
-        <div class="nav-links">
-            <a href="index.html" class="active">ส่งผลงาน</a>
-            <a href="formfeedback.html">แบบฟอร์มประเมิน</a>
-        </div>
-    </div>
-</nav>
+    </nav>
 
     <!-- Hero Section -->
     <header id="hero" class="page-hero">
@@ -92,15 +92,9 @@
                         <textarea id="project_description" name="project_description" rows="4" placeholder="อธิบายแนวทางการแก้ปัญหาด้วย AI ของคุณโดยสังเขป..." required></textarea>
                     </div>
 
-                    <!-- URL / Hosted Project -->
-                    <div class="form-group">
-                        <label for="html_url">URL ของโปรเจกต์ HTML / เว็บไซต์</label>
-                        <input type="url" id="html_url" name="html_url" placeholder="https://your-project.vercel.app หรือ ลิงก์ GitHub">
-                    </div>
-
                     <!-- Upload File HTML -->
                     <div class="form-group">
-                        <label for="file_html">หรืออัปโหลดไฟล์ HTML</label>
+                        <label for="file_html">อัปโหลดไฟล์ HTML</label>
                         <div class="file-input-wrapper">
                             <input type="file" id="file_html" name="file_html" accept=".html,.htm">
                             <label for="file_html" class="file-input-label">
@@ -109,7 +103,7 @@
                         </div>
                     </div>
 
-                    <!-- Upload File Markdown (.md) - Kolom Tambahan -->
+                    <!-- Upload File Markdown (.md) -->
                     <div class="form-group">
                         <label for="file_md">อัปโหลดไฟล์ Markdown (.md)</label>
                         <div class="file-input-wrapper">
