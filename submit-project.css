@@ -367,6 +367,13 @@ body {
 }
 
 /* ===== Success Modal ===== */
+/* Penting: saat atribut [hidden] ada, modal HARUS benar-benar hilang.
+   Tanpa ini, display:flex menimpa [hidden] sehingga modal transparan
+   tetap menutupi layar dan memblokir klik/ketik ke form. */
+.success-modal[hidden] {
+    display: none !important;
+}
+
 .success-modal {
     position: fixed;
     inset: 0;
