@@ -1,67 +1,213 @@
-const API_URL = "https://pindai-hackathon-api.vercel.app/api/submit";
+const API_BASE = "https://pindai-hackathon-api.vercel.app/api";
+const API_URL = `${API_BASE}/submit`;
+const SEND_OTP_URL = `${API_BASE}/send-otp`;
+const VERIFY_OTP_URL = `${API_BASE}/verify-otp`;
 
-const THAI_MESSAGES = {
-    choose_html: "เลือกไฟล์ .html",
-    choose_md: "เลือกไฟล์ .md",
-    sending: "กำลังส่ง...",
-    btn_submit: "ส่งผลงาน",
-    err_words: "คำอธิบายเกินขีดจำกัด 100 คำ",
-    err_theme: "กรุณาเลือกธีมหัวข้อโปรเจกต์",
-    err_connect: "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองอีกครั้ง",
-    success_msg: "ส่งผลงานเรียบร้อยแล้ว! โปรดตรวจสอบอีเมลของคุณเพื่อยืนยัน"
+// Pesan bilingual (Thai / English)
+const MSG = {
+    choose_html: "เลือกไฟล์ .html / Choose .html file",
+    choose_md: "เลือกไฟล์ .md / Choose .md file",
+    sending: "กำลังส่ง... / Sending...",
+    btn_submit: "ส่งผลงาน / Submit",
+    err_words: "คำอธิบายเกินขีดจำกัด 100 คำ / Description exceeds the 100-word limit.",
+    err_theme: "กรุณาเลือกธีมหัวข้อโปรเจกต์ / Please select a project theme.",
+    err_connect: "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองอีกครั้ง / Cannot connect to the server. Please try again.",
+    err_email: "กรุณากรอกอีเมลที่ถูกต้อง / Please enter a valid email address.",
+    err_not_verified: "กรุณายืนยันอีเมลก่อนส่งผลงาน / Please verify your email before submitting.",
+    // OTP flow
+    verify_btn: "ยืนยันอีเมล / Verify",
+    verify_sending: "กำลังส่งรหัส... / Sending code...",
+    verify_sent: "ส่งรหัส OTP ไปที่อีเมลของคุณแล้ว / An OTP has been sent to your email.",
+    verify_resend: "ส่งรหัสใหม่ / Resend",
+    otp_checking: "กำลังตรวจสอบ... / Checking...",
+    otp_confirm: "ตรวจสอบรหัส / Confirm",
+    otp_empty: "กรุณากรอกรหัส OTP / Please enter the OTP code.",
+    verified_ok: "✓ อีเมลได้รับการยืนยันแล้ว / Email verified.",
 };
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("hackathon-form");
     const submitBtn = document.getElementById("submit-btn");
     const submitBtnText = document.getElementById("submit-btn-text");
+    const submitHint = document.getElementById("submit-hint");
     const messageBox = document.getElementById("form-message");
-    
-    // File HTML elements
+
+    // File elements
     const fileInput = document.getElementById("file_html");
     const fileChosenName = document.getElementById("file-chosen-name");
-
-    // File Markdown (.md) elements (Tambahan)
     const mdInput = document.getElementById("file_md");
     const mdChosenName = document.getElementById("md-file-chosen-name");
 
     const descInput = document.getElementById("project_description");
     const themeSelect = document.getElementById("project_theme");
 
-    // Event listener untuk preview nama file HTML
+    // Email verification elements
+    const emailInput = document.getElementById("email");
+    const verifyBtn = document.getElementById("verify-email-btn");
+    const emailVerifyStatus = document.getElementById("email-verify-status");
+    const otpBlock = document.getElementById("otp-block");
+    const otpInput = document.getElementById("otp_code");
+    const confirmOtpBtn = document.getElementById("confirm-otp-btn");
+    const otpStatus = document.getElementById("otp-status");
+
+    // Modal elements
+    const successModal = document.getElementById("success-modal");
+    const successModalClose = document.getElementById("success-modal-close");
+
+    // State
+    let verifiedEmail = null; // email yang sudah lolos verifikasi OTP
+
+    // ---- File preview ----
     fileInput.addEventListener("change", () => {
         if (fileInput.files.length > 0) {
             fileChosenName.textContent = fileInput.files[0].name;
             fileChosenName.parentElement.classList.add("has-file");
         } else {
-            fileChosenName.textContent = THAI_MESSAGES.choose_html;
+            fileChosenName.textContent = MSG.choose_html;
             fileChosenName.parentElement.classList.remove("has-file");
         }
     });
 
-    // Event listener untuk preview nama file Markdown (.md) (Tambahan)
     mdInput.addEventListener("change", () => {
         if (mdInput.files.length > 0) {
             mdChosenName.textContent = mdInput.files[0].name;
             mdChosenName.parentElement.classList.add("has-file");
         } else {
-            mdChosenName.textContent = THAI_MESSAGES.choose_md;
+            mdChosenName.textContent = MSG.choose_md;
             mdChosenName.parentElement.classList.remove("has-file");
         }
     });
 
+    // ---- Email verification ----
+
+    // Jika user mengubah email setelah verifikasi, reset status verifikasi
+    emailInput.addEventListener("input", () => {
+        const current = emailInput.value.trim().toLowerCase();
+        if (verifiedEmail && current !== verifiedEmail) {
+            resetVerification();
+        }
+    });
+
+    verifyBtn.addEventListener("click", async () => {
+        const email = emailInput.value.trim();
+        if (!email || !emailRegex.test(email)) {
+            setStatus(emailVerifyStatus, MSG.err_email, "error");
+            emailInput.focus();
+            return;
+        }
+
+        setButtonLoading(verifyBtn, true, MSG.verify_sending);
+        setStatus(emailVerifyStatus, "", "");
+
+        try {
+            const res = await fetch(SEND_OTP_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            });
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                setStatus(emailVerifyStatus, data.error || MSG.err_connect, "error");
+                return;
+            }
+
+            otpBlock.hidden = false;
+            otpInput.focus();
+            setStatus(emailVerifyStatus, MSG.verify_sent, "success");
+            verifyBtn.querySelector("span")?.remove();
+            verifyBtn.textContent = MSG.verify_resend;
+        } catch (err) {
+            console.error(err);
+            setStatus(emailVerifyStatus, MSG.err_connect, "error");
+        } finally {
+            setButtonLoading(verifyBtn, false, verifyBtn.textContent);
+        }
+    });
+
+    confirmOtpBtn.addEventListener("click", async () => {
+        const email = emailInput.value.trim();
+        const code = otpInput.value.trim();
+
+        if (!code) {
+            setStatus(otpStatus, MSG.otp_empty, "error");
+            otpInput.focus();
+            return;
+        }
+
+        setButtonLoading(confirmOtpBtn, true, MSG.otp_checking);
+        setStatus(otpStatus, "", "");
+
+        try {
+            const res = await fetch(VERIFY_OTP_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, otp_code: code }),
+            });
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                setStatus(otpStatus, data.error || MSG.err_connect, "error");
+                return;
+            }
+
+            // Verifikasi sukses
+            verifiedEmail = email.toLowerCase();
+            markVerified();
+        } catch (err) {
+            console.error(err);
+            setStatus(otpStatus, MSG.err_connect, "error");
+        } finally {
+            setButtonLoading(confirmOtpBtn, false, MSG.otp_confirm);
+        }
+    });
+
+    function markVerified() {
+        setStatus(emailVerifyStatus, MSG.verified_ok, "success");
+        otpStatus.textContent = "";
+        otpBlock.hidden = true;
+        emailInput.readOnly = true;
+        verifyBtn.disabled = true;
+        verifyBtn.classList.add("verified");
+        // Aktifkan submit
+        submitBtn.disabled = false;
+        submitHint.hidden = true;
+    }
+
+    function resetVerification() {
+        verifiedEmail = null;
+        otpBlock.hidden = true;
+        otpInput.value = "";
+        otpStatus.textContent = "";
+        emailInput.readOnly = false;
+        verifyBtn.disabled = false;
+        verifyBtn.classList.remove("verified");
+        verifyBtn.textContent = MSG.verify_btn;
+        setStatus(emailVerifyStatus, "", "");
+        submitBtn.disabled = true;
+        submitHint.hidden = false;
+    }
+
+    // ---- Submit ----
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
         clearMessage();
 
+        if (!verifiedEmail || emailInput.value.trim().toLowerCase() !== verifiedEmail) {
+            showMessage(MSG.err_not_verified, "error");
+            return;
+        }
+
         if (!themeSelect.value) {
-            showMessage(THAI_MESSAGES.err_theme, "error");
+            showMessage(MSG.err_theme, "error");
             return;
         }
 
         const wordCount = descInput.value.trim().split(/\s+/).filter(Boolean).length;
         if (wordCount > 100) {
-            showMessage(THAI_MESSAGES.err_words, "error");
+            showMessage(MSG.err_words, "error");
             return;
         }
 
@@ -88,30 +234,61 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json().catch(() => ({}));
 
             if (!res.ok) {
-                showMessage(data.error || "เกิดข้อผิดพลาดในการส่งข้อมูล", "error");
+                showMessage(data.error || "เกิดข้อผิดพลาดในการส่งข้อมูล / An error occurred.", "error");
                 return;
             }
 
-            showMessage(THAI_MESSAGES.success_msg, "success");
+            // Sukses: tampilkan modal terima kasih
             form.reset();
-            
-            // Reset tampilan nama file terpilih
-            fileChosenName.textContent = THAI_MESSAGES.choose_html;
+            fileChosenName.textContent = MSG.choose_html;
             fileChosenName.parentElement.classList.remove("has-file");
-            
-            mdChosenName.textContent = THAI_MESSAGES.choose_md;
+            mdChosenName.textContent = MSG.choose_md;
             mdChosenName.parentElement.classList.remove("has-file");
+            resetVerification();
+            openModal();
         } catch (err) {
             console.error(err);
-            showMessage(THAI_MESSAGES.err_connect, "error");
+            showMessage(MSG.err_connect, "error");
         } finally {
             setLoading(false);
         }
     });
 
+    // ---- Modal ----
+    function openModal() {
+        successModal.hidden = false;
+        // Force reflow agar animasi berjalan
+        void successModal.offsetWidth;
+        successModal.classList.add("visible");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+        successModal.classList.remove("visible");
+        document.body.style.overflow = "";
+        setTimeout(() => { successModal.hidden = true; }, 300);
+    }
+
+    successModalClose.addEventListener("click", closeModal);
+    successModal.querySelector(".success-modal-backdrop").addEventListener("click", closeModal);
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !successModal.hidden) closeModal();
+    });
+
+    // ---- Helpers ----
     function setLoading(isLoading) {
-        submitBtn.disabled = isLoading;
-        submitBtnText.textContent = isLoading ? THAI_MESSAGES.sending : THAI_MESSAGES.btn_submit;
+        submitBtn.disabled = isLoading || !verifiedEmail;
+        submitBtnText.textContent = isLoading ? MSG.sending : MSG.btn_submit;
+    }
+
+    function setButtonLoading(btn, isLoading, text) {
+        btn.disabled = isLoading;
+        if (text) btn.textContent = text;
+    }
+
+    function setStatus(el, text, type) {
+        el.textContent = text;
+        el.className = "verify-status" + (type ? " " + type : "");
     }
 
     function showMessage(text, type) {
