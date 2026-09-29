@@ -19,8 +19,8 @@
                 <span class="logo-text">AI FOR ALL HACKATHON</span>
             </div>
             <div class="nav-links">
-                <a href="index.html" class="active">ส่งผลงาน</a>
-                <a href="formfeedback.html">แบบฟอร์มประเมิน</a>
+                <a href="index.html" class="active">ส่งผลงาน / Submit</a>
+                <a href="formfeedback.html">แบบฟอร์มประเมิน / Feedback</a>
             </div>
         </div>
     </nav>
@@ -29,9 +29,10 @@
     <header id="hero" class="page-hero">
         <div class="container hero-content">
             <div class="eyebrow">AI FOR ALL HACKATHON 2026</div>
-            <h1>ส่งผลงานโปรเจกต์ AI ของคุณ</h1>
+            <h1>ส่งผลงานโปรเจกต์ AI ของคุณ / Submit Your AI Project</h1>
             <p class="subheadline">
-                ส่งโปรเจกต์ Gen AI ของทีมคุณที่นี่ โปรดตรวจสอบให้แน่ใจว่าข้อมูลทั้งหมดถูกต้อง
+                ส่งโปรเจกต์ Gen AI ของทีมคุณที่นี่ โปรดตรวจสอบให้แน่ใจว่าข้อมูลทั้งหมดถูกต้อง<br>
+                Submit your team's Gen AI project here. Please make sure all information is correct.
             </p>
         </div>
     </header>
@@ -44,39 +45,57 @@
 
                     <!-- Team Name -->
                     <div class="form-group">
-                        <label for="team_name">ชื่อทีม</label>
-                        <input type="text" id="team_name" name="team_name" placeholder="กรอกชื่อทีม" required>
+                        <label for="team_name">ชื่อทีม / Team Name</label>
+                        <input type="text" id="team_name" name="team_name" placeholder="กรอกชื่อทีม / Enter team name" required>
                     </div>
 
-                    <!-- Email Contact -->
+                    <!-- Email Contact + Verifikasi OTP -->
                     <div class="form-group">
-                        <label for="email">อีเมลติดต่อ (หัวหน้าทีม)</label>
-                        <input type="email" id="email" name="email" placeholder="teamleader@example.com" required>
+                        <label for="email">อีเมลติดต่อ (หัวหน้าทีม) / Contact Email (Team Leader)</label>
+                        <div class="email-verify-row">
+                            <input type="email" id="email" name="email" placeholder="teamleader@example.com" required>
+                            <button type="button" id="verify-email-btn" class="btn-verify">
+                                ยืนยันอีเมล / Verify
+                            </button>
+                        </div>
+                        <span id="email-verify-status" class="verify-status" aria-live="polite"></span>
+
+                        <!-- Blok input OTP, tersembunyi sampai kode dikirim -->
+                        <div id="otp-block" class="otp-block" hidden>
+                            <label for="otp_code">กรอกรหัส OTP 6 หลักจากอีเมลของคุณ / Enter the 6-digit OTP from your email</label>
+                            <div class="otp-input-row">
+                                <input type="text" id="otp_code" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="______">
+                                <button type="button" id="confirm-otp-btn" class="btn-verify">
+                                    ตรวจสอบรหัส / Confirm
+                                </button>
+                            </div>
+                            <span id="otp-status" class="verify-status" aria-live="polite"></span>
+                        </div>
                     </div>
 
                     <!-- Team Members -->
                     <div class="form-group">
-                        <label>สมาชิกในทีม (สูงสุด 5 คน)</label>
+                        <label>สมาชิกในทีม (สูงสุด 5 คน) / Team Members (max 5)</label>
                         <div class="members-inputs">
-                            <input type="text" name="member_1" placeholder="สมาชิกคนที่ 1 (หัวหน้าทีม)" required>
-                            <input type="text" name="member_2" placeholder="สมาชิกคนที่ 2">
-                            <input type="text" name="member_3" placeholder="สมาชิกคนที่ 3">
-                            <input type="text" name="member_4" placeholder="สมาชิกคนที่ 4">
-                            <input type="text" name="member_5" placeholder="สมาชิกคนที่ 5">
+                            <input type="text" name="member_1" placeholder="สมาชิกคนที่ 1 (หัวหน้าทีม) / Member 1 (Leader)" required>
+                            <input type="text" name="member_2" placeholder="สมาชิกคนที่ 2 / Member 2">
+                            <input type="text" name="member_3" placeholder="สมาชิกคนที่ 3 / Member 3">
+                            <input type="text" name="member_4" placeholder="สมาชิกคนที่ 4 / Member 4">
+                            <input type="text" name="member_5" placeholder="สมาชิกคนที่ 5 / Member 5">
                         </div>
                     </div>
 
                     <!-- Project Title -->
                     <div class="form-group">
-                        <label for="project_title">ชื่อโปรเจกต์</label>
-                        <input type="text" id="project_title" name="project_title" placeholder="กรอกชื่อโปรเจกต์" required>
+                        <label for="project_title">ชื่อโปรเจกต์ / Project Title</label>
+                        <input type="text" id="project_title" name="project_title" placeholder="กรอกชื่อโปรเจกต์ / Enter project title" required>
                     </div>
 
                     <!-- Project Theme Dropdown -->
                     <div class="form-group">
-                        <label for="project_theme">ธีมหัวข้อโปรเจกต์ (Project Theme)</label>
+                        <label for="project_theme">ธีมหัวข้อโปรเจกต์ / Project Theme</label>
                         <select id="project_theme" name="project_theme" required class="form-select">
-                            <option value="" disabled selected>-- เลือกธีมหัวข้อโปรเจกต์ --</option>
+                            <option value="" disabled selected>-- เลือกธีมหัวข้อโปรเจกต์ / Select a theme --</option>
                             <option value="1. Education & Future Skills">1. Education & Future Skills (ยกระดับการศึกษา สร้างทักษะแห่งอนาคต)</option>
                             <option value="2. SME & Local Economy">2. SME & Local Economy (เสริมพลัง SME ขับเคลื่อนเศรษฐกิจท้องถิ่น)</option>
                             <option value="3. Agriculture & Food">3. Agriculture & Food (พลิกโฉมการเกษตร และอาหาร)</option>
@@ -88,28 +107,28 @@
 
                     <!-- Description -->
                     <div class="form-group">
-                        <label for="project_description">คำอธิบายโปรเจกต์ (ไม่เกิน 100 คำ)</label>
-                        <textarea id="project_description" name="project_description" rows="4" placeholder="อธิบายแนวทางการแก้ปัญหาด้วย AI ของคุณโดยสังเขป..." required></textarea>
+                        <label for="project_description">คำอธิบายโปรเจกต์ (ไม่เกิน 100 คำ) / Project Description (max 100 words)</label>
+                        <textarea id="project_description" name="project_description" rows="4" placeholder="อธิบายแนวทางการแก้ปัญหาด้วย AI ของคุณโดยสังเขป... / Briefly describe your AI solution..." required></textarea>
                     </div>
 
                     <!-- Upload File HTML -->
                     <div class="form-group">
-                        <label for="file_html">อัปโหลดไฟล์ HTML</label>
+                        <label for="file_html">อัปโหลดไฟล์ HTML / Upload HTML File</label>
                         <div class="file-input-wrapper">
                             <input type="file" id="file_html" name="file_html" accept=".html,.htm">
                             <label for="file_html" class="file-input-label">
-                                <span id="file-chosen-name">เลือกไฟล์ .html</span>
+                                <span id="file-chosen-name">เลือกไฟล์ .html / Choose .html file</span>
                             </label>
                         </div>
                     </div>
 
                     <!-- Upload File Markdown (.md) -->
                     <div class="form-group">
-                        <label for="file_md">อัปโหลดไฟล์ Markdown (.md)</label>
+                        <label for="file_md">อัปโหลดไฟล์ Markdown (.md) / Upload Markdown File (.md)</label>
                         <div class="file-input-wrapper">
                             <input type="file" id="file_md" name="file_md" accept=".md">
                             <label for="file_md" class="file-input-label">
-                                <span id="md-file-chosen-name">เลือกไฟล์ .md</span>
+                                <span id="md-file-chosen-name">เลือกไฟล์ .md / Choose .md file</span>
                             </label>
                         </div>
                     </div>
@@ -119,7 +138,7 @@
                         <label class="checkbox-container">
                             <input type="checkbox" id="confirm_nationality" name="confirm_nationality" required>
                             <span class="checkmark"></span>
-                            <span>เราขอยืนยันว่าสมาชิกทุกคนในทีมมีสัญชาติไทยและมีอายุมากกว่า 18 ปี</span>
+                            <span>เราขอยืนยันว่าสมาชิกทุกคนในทีมมีสัญชาติไทยและมีอายุมากกว่า 18 ปี / We confirm all team members are Thai nationals and over 18 years old.</span>
                         </label>
                     </div>
 
@@ -127,20 +146,45 @@
                         <label class="checkbox-container">
                             <input type="checkbox" id="confirm_truth" name="confirm_truth" required>
                             <span class="checkmark"></span>
-                            <span>เราขอยืนยันว่าข้อมูลทั้งหมดที่ระบุเป็นความจริงและถูกต้อง</span>
+                            <span>เราขอยืนยันว่าข้อมูลทั้งหมดที่ระบุเป็นความจริงและถูกต้อง / We confirm that all information provided is true and correct.</span>
                         </label>
                     </div>
 
-                    <!-- Submit Button -->
-                    <button type="submit" class="btn-primary btn-submit" id="submit-btn">
-                        <span id="submit-btn-text">ส่งผลงาน</span>
+                    <!-- Submit Button (disabled sampai email terverifikasi) -->
+                    <button type="submit" class="btn-primary btn-submit" id="submit-btn" disabled>
+                        <span id="submit-btn-text">ส่งผลงาน / Submit</span>
                     </button>
+                    <p id="submit-hint" class="submit-hint">
+                        กรุณายืนยันอีเมลก่อนส่งผลงาน / Please verify your email before submitting.
+                    </p>
 
                     <div id="form-message" class="form-message" role="status" aria-live="polite"></div>
                 </form>
             </div>
         </div>
     </section>
+
+    <!-- Modal Terima Kasih / Thank You Modal -->
+    <div id="success-modal" class="success-modal" hidden>
+        <div class="success-modal-backdrop"></div>
+        <div class="success-modal-card" role="dialog" aria-modal="true" aria-labelledby="success-modal-title">
+            <div class="success-modal-icon">
+                <svg viewBox="0 0 52 52" width="72" height="72" aria-hidden="true">
+                    <circle class="checkmark-circle" cx="26" cy="26" r="24" fill="none" />
+                    <path class="checkmark-check" fill="none" d="M14 27 l8 8 l16 -18" />
+                </svg>
+            </div>
+            <h2 id="success-modal-title">ส่งผลงานสำเร็จ!<br>Submission Successful!</h2>
+            <p class="success-modal-text">
+                ขอบคุณที่ส่งผลงานเข้าร่วม AI For All Hackathon 2026<br>
+                Thank you for submitting your project to the AI For All Hackathon 2026.<br>
+                โปรดตรวจสอบอีเมลของคุณเพื่อยืนยัน / Please check your email for confirmation.
+            </p>
+            <button type="button" id="success-modal-close" class="btn-primary">
+                เยี่ยมเลย / Great!
+            </button>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer-section">
