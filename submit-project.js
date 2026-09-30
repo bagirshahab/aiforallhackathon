@@ -111,9 +111,13 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // Teks tombol yang akan dipulihkan setelah loading selesai.
+        // Sekali OTP pernah dikirim, tombol berubah jadi "Resend".
+        const restoreText = otpBlock.hidden ? MSG.verify_btn : MSG.verify_resend;
         setButtonLoading(verifyBtn, true, MSG.verify_sending);
         setStatus(emailVerifyStatus, "", "");
 
+        let sentOk = false;
         try {
             const res = await fetch(SEND_OTP_URL, {
                 method: "POST",
@@ -127,16 +131,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            sentOk = true;
             otpBlock.hidden = false;
             otpInput.focus();
             setStatus(emailVerifyStatus, MSG.verify_sent, "success");
-            verifyBtn.querySelector("span")?.remove();
-            verifyBtn.textContent = MSG.verify_resend;
         } catch (err) {
             console.error(err);
             setStatus(emailVerifyStatus, MSG.err_connect, "error");
         } finally {
-            setButtonLoading(verifyBtn, false, verifyBtn.textContent);
+            // Kalau berhasil kirim, tombol jadi "Resend"; kalau gagal, kembali ke teks semula.
+            setButtonLoading(verifyBtn, false, sentOk ? MSG.verify_resend : restoreText);
         }
     });
 
@@ -235,8 +239,12 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // Hitung kata untuk teks berspasi (EN). Untuk teks Thai yang tidak
+        // memakai spasi antar kata, gunakan batas karakter sebagai pengganti
+        // (perkiraan sekitar 6 karakter per kata, jadi 100 kata kira-kira 600 karakter).
         const wordCount = description.split(/\s+/).filter(Boolean).length;
-        if (wordCount > 100) {
+        const charCount = description.replace(/\s/g, "").length;
+        if (wordCount > 100 || charCount > 600) {
             showMessage(MSG.err_words, "error");
             return;
         }
