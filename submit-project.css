@@ -660,3 +660,28 @@ html, body {
     padding-top: 0.6rem;
     border-top: 1px solid var(--true-border);
 }
+
+/* ---- Penyesuaian notice di HP agar seukuran teks lain ---- */
+@media (max-width: 768px) {
+    .form-notice {
+        padding: 0.85rem 0.9rem;
+        margin: 0 0 1rem;
+    }
+    .form-notice p {
+        font-size: 0.78rem;
+        line-height: 1.5;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-notice {
+        padding: 0.8rem;
+    }
+    .form-notice p {
+        font-size: 0.75rem;
+    }
+    .form-notice p + p {
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+    }
+}
