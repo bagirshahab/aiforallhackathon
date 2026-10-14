@@ -637,3 +637,26 @@ html, body {
         font-size: 0.82rem;
     }
 }
+
+/* ===== Nationality / verification notice ===== */
+.form-notice {
+    margin: 0 0 1.25rem;
+    padding: 1rem 1.1rem;
+    background-color: rgba(255, 204, 0, 0.06);
+    border: 1px solid rgba(255, 153, 0, 0.35);
+    border-left: 4px solid var(--accent-yellow);
+    border-radius: 8px;
+}
+
+.form-notice p {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--true-text-muted);
+}
+
+.form-notice p + p {
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--true-border);
+}
