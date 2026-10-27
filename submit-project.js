@@ -17,6 +17,9 @@ const MSG = {
     err_file_md: "กรุณาอัปโหลดไฟล์ Markdown (.md) / Please upload a Markdown (.md) file.",
     err_checkbox: "กรุณายืนยันเงื่อนไขทั้งหมด / Please confirm all the conditions.",
     err_connect: "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองอีกครั้ง / Cannot connect to the server. Please try again.",
+    err_network: "การเชื่อมต่อขัดข้อง อาจเป็นเพราะอินเทอร์เน็ตหรือไฟล์ใหญ่เกินไป กรุณาลองใหม่ / Connection failed — possibly due to your internet or a large file. Please try again.",
+    err_timeout: "การส่งใช้เวลานานเกินไป กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่ / The submission took too long. Please check your connection and try again.",
+    err_filesize: "ไฟล์มีขนาดใหญ่เกิน 5MB กรุณาลดขนาดไฟล์ / A file exceeds 5MB. Please upload smaller files.",
     err_email: "กรุณากรอกอีเมลที่ถูกต้อง / Please enter a valid email address.",
     err_not_verified: "กรุณายืนยันอีเมลก่อนส่งผลงาน / Please verify your email before submitting.",
     // OTP flow
@@ -31,6 +34,8 @@ const MSG = {
 };
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB, harus sama dengan batas di backend
+const SUBMIT_TIMEOUT_MS = 60000; // batas waktu request submit: 60 detik
 
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("hackathon-form");
@@ -259,6 +264,12 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // Cek ukuran file sebelum upload (hindari gagal diam-diam saat file > 5MB)
+        if (fileInput.files[0].size > MAX_FILE_SIZE || mdInput.files[0].size > MAX_FILE_SIZE) {
+            showMessage(MSG.err_filesize, "error");
+            return;
+        }
+
         // Kedua checkbox konfirmasi wajib dicentang
         const confirmNat = document.getElementById("confirm_nationality");
         const confirmTruth = document.getElementById("confirm_truth");
@@ -281,15 +292,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         setLoading(true);
 
+        // Timeout agar request yang menggantung (koneksi lambat/putus) tidak membuat
+        // tombol stuck di "Sending..." selamanya.
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), SUBMIT_TIMEOUT_MS);
+
         try {
             const res = await fetch(API_URL, {
                 method: "POST",
                 body: formData,
+                signal: controller.signal,
             });
 
             const data = await res.json().catch(() => ({}));
 
             if (!res.ok) {
+                // Server merespons dengan error (misal 400/403/500) -> tampilkan pesannya
                 showMessage(data.error || "เกิดข้อผิดพลาดในการส่งข้อมูล / An error occurred.", "error");
                 return;
             }
@@ -304,8 +322,14 @@ document.addEventListener("DOMContentLoaded", () => {
             openModal();
         } catch (err) {
             console.error(err);
-            showMessage(MSG.err_connect, "error");
+            // Bedakan jenis kegagalan agar peserta tahu penyebabnya, bukan cuma "cannot connect".
+            if (err.name === "AbortError") {
+                showMessage(MSG.err_timeout, "error"); // request terlalu lama / timeout
+            } else {
+                showMessage(MSG.err_network, "error"); // koneksi putus / file besar / jaringan
+            }
         } finally {
+            clearTimeout(timeoutId);
             setLoading(false);
         }
     });
