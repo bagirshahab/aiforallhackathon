@@ -37,7 +37,21 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB, harus sama dengan batas di backend
 const SUBMIT_TIMEOUT_MS = 60000; // batas waktu request submit: 60 detik
 
+// Deadline penutupan submission: 4 November 2026, 23:59:59 waktu Thailand (UTC+7).
+// Setelah waktu ini, form dialihkan ke halaman pengumuman "ditutup".
+const SUBMISSION_DEADLINE = new Date("2026-11-04T23:59:59+07:00");
+
+function isSubmissionClosed() {
+    return Date.now() > SUBMISSION_DEADLINE.getTime();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    // Jika sudah melewati deadline, alihkan ke halaman pengumuman penutupan.
+    if (isSubmissionClosed()) {
+        window.location.replace("submission-closed.html");
+        return;
+    }
+
     const form = document.getElementById("hackathon-form");
     const submitBtn = document.getElementById("submit-btn");
     const submitBtnText = document.getElementById("submit-btn-text");
