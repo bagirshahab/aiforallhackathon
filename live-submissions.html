@@ -1,45 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>AI For All Hackathon — Live Submissions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Dashboard Data Pendaftaran — AI For All Hackathon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --red: #E60000;
             --dark-red: #B30000;
             --cyan: #00F0FF;
             --bg: #0A0E17;
-            --card: #121824;
-            --border: #1E293B;
-            --text: #F8FAFC;
-            --muted: #94A3B8;
-            --green: #4ADE80;
+            --panel: #FFFFFF;
+            --ink: #1E293B;
+            --muted: #64748B;
+            --line: #E2E8F0;
+            --navy: #1E293B;
+            --green: #22C55E;
+            /* Palet tema (urut 1-6) */
+            --t1: #3B82F6;
+            --t2: #F59E0B;
+            --t3: #22C55E;
+            --t4: #EF4444;
+            --t5: #8B5CF6;
+            --t6: #14B8A6;
         }
 
         * { box-sizing: border-box; }
 
         body {
             margin: 0;
-            background: var(--bg);
-            color: var(--text);
+            background: #EEF2F7;
+            color: var(--ink);
             font-family: 'Inter', sans-serif;
         }
 
+        /* Topbar + live indicator */
         .topbar {
-            background: #0A0E17;
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 1.5rem;
+            background: var(--bg);
+            color: #fff;
+            padding: 0.85rem 1.25rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 1rem;
             flex-wrap: wrap;
         }
-
         .brand {
             font-weight: 800;
             letter-spacing: 1px;
@@ -48,227 +56,135 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
-        .live {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
-
-        .dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: var(--green);
-            box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
-            animation: pulse 2s infinite;
-        }
-
+        .live { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #94A3B8; }
+        .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
         .dot.off { background: #F87171; animation: none; }
-
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); }
-            70% { box-shadow: 0 0 0 9px rgba(74, 222, 128, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
+            70% { box-shadow: 0 0 0 9px rgba(34,197,94,0); }
+            100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
         }
 
-        main { max-width: 1300px; margin: 0 auto; padding: 1.5rem; }
-
-        h1 { margin: 0 0 0.25rem; font-size: 1.6rem; font-weight: 800; }
-        .sub { color: var(--muted); font-size: 0.9rem; margin: 0 0 1.25rem; }
-
-        .toolbar {
-            display: flex;
-            gap: 0.75rem;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
+        /* Header dashboard (navy) */
+        .dash-header {
+            background: var(--navy);
+            color: #fff;
+            text-align: center;
+            padding: 1.5rem 1rem 1rem;
         }
+        .dash-header h1 { margin: 0; font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 900; letter-spacing: 0.5px; }
+        .dash-header .meta { margin-top: 0.5rem; font-size: 0.78rem; color: #CBD5E1; }
 
-        .counter {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 0.55rem 1rem;
-            font-size: 0.85rem;
-            color: var(--muted);
-        }
-        .counter strong { color: var(--cyan); font-size: 1.1rem; margin-right: 0.35rem; }
+        main { max-width: 1200px; margin: 0 auto; padding: 1.25rem; }
 
-        .search {
-            flex: 1;
-            min-width: 200px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 0.65rem 1rem;
-            color: var(--text);
-            font-family: inherit;
+        .section-title {
+            background: var(--navy);
+            color: #fff;
+            text-align: center;
+            font-weight: 700;
             font-size: 0.9rem;
+            letter-spacing: 1px;
+            padding: 0.5rem;
+            border-radius: 6px 6px 0 0;
+            margin-top: 1.25rem;
         }
-        .search:focus { outline: none; border-color: var(--cyan); }
 
+        /* Kartu ringkasan */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 0 0 8px 8px;
+        }
+        .card {
+            padding: 1rem 0.75rem;
+            text-align: center;
+            border-right: 1px solid var(--line);
+            border-top: 4px solid var(--c, #94A3B8);
+        }
+        .card:last-child { border-right: none; }
+        .card .label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.5px; color: var(--muted); text-transform: uppercase; min-height: 2.2em; display:flex; align-items:center; justify-content:center; }
+        .card .value { font-size: 1.9rem; font-weight: 800; color: var(--c, var(--ink)); margin: 0.3rem 0 0.15rem; line-height: 1; }
+        .card .sub { font-size: 0.72rem; color: var(--muted); }
+
+        /* Kartu per tema */
+        .theme-cards { grid-template-columns: repeat(6, 1fr); }
+        .theme-cards .card .label { color: #fff; background: var(--c); border-radius: 0; padding: 0.3rem; min-height: auto; font-size: 0.66rem; }
+
+        /* Grid grafik */
+        .charts-grid {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1.25rem;
+        }
+        .row-2 { grid-template-columns: 1fr 1fr; }
+        .row-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+        .chart-card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 1.1rem 1.25rem 1.25rem;
+        }
+        .chart-card h3 { margin: 0 0 1rem; text-align: center; font-size: 1rem; font-weight: 700; }
+
+        .legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; justify-content: center; margin-top: 0.75rem; font-size: 0.72rem; color: var(--muted); }
+        .legend span.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 0.35rem; vertical-align: middle; }
+
+        svg { display: block; width: 100%; height: auto; overflow: visible; }
+        .axis-line { stroke: var(--line); stroke-width: 1; }
+        .grid-line { stroke: #F1F5F9; stroke-width: 1; }
+        .bar-label { font-size: 11px; font-weight: 700; fill: var(--ink); }
+        .axis-text { font-size: 10px; fill: var(--muted); }
+
+        /* Tabel pendukung */
+        .tables-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+        table.support { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+        table.support th { background: var(--navy); color: #fff; font-size: 0.72rem; padding: 0.5rem 0.7rem; text-align: left; }
+        table.support th:not(:first-child), table.support td:not(:first-child) { text-align: right; }
+        table.support td { padding: 0.45rem 0.7rem; font-size: 0.8rem; border-bottom: 1px solid var(--line); }
+        table.support tr.total td { font-weight: 800; background: #F8FAFC; }
+
+        /* Tabel submission (data mentah) */
+        .toolbar { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin: 1.25rem 0 0.75rem; }
+        .search { flex: 1; min-width: 220px; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 0.6rem 1rem; font-family: inherit; font-size: 0.9rem; }
+        .search:focus { outline: none; border-color: var(--cyan); }
+        .table-wrap { background: #fff; border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; }
+        table.raw { width: 100%; border-collapse: collapse; min-width: 1000px; }
+        table.raw th, table.raw td { padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); font-size: 0.82rem; text-align: left; vertical-align: top; }
+        table.raw th { position: sticky; top: 0; background: #0F1522; color: var(--cyan); font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; }
+        table.raw td.no { color: var(--red); font-weight: 700; }
+        table.raw td.desc { color: var(--muted); max-width: 340px; }
+        table.raw td.muted { color: var(--muted); }
+
+        .state { padding: 2.5rem 1rem; text-align: center; color: var(--muted); }
         .updated { font-size: 0.78rem; color: var(--muted); }
 
-        .table-wrap {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow-x: auto;
-        }
-
-        table { width: 100%; border-collapse: collapse; min-width: 900px; }
-
-        th, td {
-            text-align: left;
-            padding: 0.8rem 1rem;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.85rem;
-            vertical-align: top;
-        }
-
-        th {
-            position: sticky;
-            top: 0;
-            background: #0F1522;
-            color: var(--cyan);
-            font-size: 0.72rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        td { color: var(--text); word-break: break-word; }
-        td.muted { color: var(--muted); }
-        td.no { color: var(--cyan); font-weight: 700; white-space: nowrap; }
-        td.desc { color: var(--muted); max-width: 380px; }
-
-        tr.new-row { animation: flash 2.5s ease-out; }
-
-        @keyframes flash {
-            0% { background: rgba(0, 240, 255, 0.22); }
-            100% { background: transparent; }
-        }
-
-        /* Panel grafik distribusi tema */
-        .chart-panel {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.25rem 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .chart-panel h2 {
-            margin: 0 0 0.2rem;
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .chart-panel .chart-sub {
-            margin: 0 0 1.1rem;
-            font-size: 0.8rem;
-            color: var(--muted);
-        }
-
-        .chart-body {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .donut-wrap {
-            position: relative;
-            width: 190px;
-            height: 190px;
-            flex-shrink: 0;
-        }
-
-        .donut-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-
-        .donut-center {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-        .donut-center strong { font-size: 1.9rem; font-weight: 800; color: var(--cyan); line-height: 1; }
-        .donut-center span { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
-
-        .legend { flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 0.7rem; }
-
-        .legend-row .legend-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.75rem;
-            font-size: 0.82rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .legend-name { display: flex; align-items: center; gap: 0.5rem; color: var(--text); }
-        .legend-swatch { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
-        .legend-val { color: var(--muted); white-space: nowrap; }
-        .legend-val strong { color: var(--text); margin-right: 0.35rem; }
-
-        .legend-bar { height: 7px; background: #0F1522; border-radius: 99px; overflow: hidden; }
-        .legend-bar > span { display: block; height: 100%; border-radius: 99px; transition: width 0.5s ease; }
-
-        .state {
-            padding: 3rem 1rem;
-            text-align: center;
-            color: var(--muted);
-            font-size: 0.95rem;
-        }
-
-        /* Login */
+        /* Gate */
         .gate {
-            max-width: 420px;
-            margin: 12vh auto 0;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-top: 4px solid var(--red);
-            border-radius: 14px;
-            padding: 2rem;
+            max-width: 420px; margin: 12vh auto 0; background: #fff;
+            border: 1px solid var(--line); border-top: 4px solid var(--red);
+            border-radius: 14px; padding: 2rem;
         }
         .gate h2 { margin: 0 0 0.4rem; }
         .gate p { margin: 0 0 1.25rem; color: var(--muted); font-size: 0.88rem; }
-        .gate input {
-            width: 100%;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.8rem 1rem;
-            color: var(--text);
-            font-family: inherit;
-            font-size: 0.95rem;
-            margin-bottom: 0.75rem;
-        }
+        .gate input { width: 100%; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 0.8rem 1rem; font-family: inherit; font-size: 0.95rem; margin-bottom: 0.75rem; }
         .gate input:focus { outline: none; border-color: var(--cyan); }
-        .gate button {
-            width: 100%;
-            background: linear-gradient(90deg, var(--red), var(--dark-red));
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 0.85rem;
-            font-family: inherit;
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .gate .err { color: #F87171; font-size: 0.82rem; margin-top: 0.75rem; min-height: 1em; }
+        .gate button { width: 100%; background: linear-gradient(90deg, var(--red), var(--dark-red)); color: #fff; border: none; border-radius: 8px; padding: 0.85rem; font-family: inherit; font-weight: 700; cursor: pointer; }
+        .gate .err { color: #DC2626; font-size: 0.82rem; margin-top: 0.75rem; min-height: 1em; }
 
         .hidden { display: none !important; }
 
-        @media (max-width: 600px) {
-            main { padding: 1rem; }
-            h1 { font-size: 1.3rem; }
+        @media (max-width: 900px) {
+            .cards, .theme-cards { grid-template-columns: repeat(3, 1fr); }
+            .card { border-bottom: 1px solid var(--line); }
+            .row-2, .row-3 { grid-template-columns: 1fr; }
+            .tables-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 520px) {
+            .cards, .theme-cards { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -279,319 +195,567 @@
         <span class="live"><span class="dot" id="dot"></span><span id="live-text">Live</span></span>
     </div>
 
-    <!-- Akses dengan key -->
+    <!-- Gate -->
     <section class="gate" id="gate">
-        <h2>Live Submissions</h2>
-        <p>Enter the dashboard key to view submissions. This page contains participant data.</p>
+        <h2>Dashboard Pendaftaran</h2>
+        <p>Masukkan dashboard key untuk melihat data. Halaman ini berisi data peserta.</p>
         <input type="password" id="key-input" placeholder="Dashboard key" autocomplete="off">
-        <button type="button" id="key-btn">View dashboard</button>
+        <button type="button" id="key-btn">Lihat dashboard</button>
         <div class="err" id="gate-err" role="alert"></div>
     </section>
 
     <!-- Dashboard -->
-    <main id="dashboard" class="hidden">
-        <h1>Live Submissions</h1>
-        <p class="sub">Updates automatically every 10 seconds. Newest submissions appear at the bottom.</p>
+    <div id="dashboard" class="hidden">
+        <header class="dash-header">
+            <h1>DASHBOARD DATA PENDAFTARAN PROYEK</h1>
+            <div class="meta" id="header-meta">Sumber: Neon DB (live) &bull; Waktu dalam WIB (UTC+7)</div>
+        </header>
 
-        <div class="toolbar">
-            <div class="counter"><strong id="total">0</strong>submissions</div>
-            <input class="search" id="search" type="search" placeholder="Search name, email, project, theme...">
-            <span class="updated" id="updated"></span>
-        </div>
+        <main>
+            <!-- Ringkasan utama -->
+            <div class="section-title">RINGKASAN UTAMA</div>
+            <div class="cards" id="summary-cards"></div>
 
-        <section class="chart-panel" aria-labelledby="chart-title">
-            <h2 id="chart-title">Submissions by Project Theme</h2>
-            <p class="chart-sub">Distribution of all submissions across the six themes.</p>
-            <div class="chart-body">
-                <div class="donut-wrap">
-                    <svg viewBox="0 0 42 42" id="donut" role="img" aria-label="Donut chart of submissions by theme"></svg>
-                    <div class="donut-center"><strong id="donut-total">0</strong><span>total</span></div>
+            <!-- Jumlah proyek per tema (kartu) -->
+            <div class="section-title">JUMLAH PROYEK PER TEMA</div>
+            <div class="cards theme-cards" id="theme-cards"></div>
+
+            <!-- Grafik baris 1: bar tema + donut tema -->
+            <div class="charts-grid row-2">
+                <div class="chart-card">
+                    <h3>Jumlah Proyek per Tema</h3>
+                    <div id="chart-theme-bar"></div>
                 </div>
-                <div class="legend" id="legend"></div>
+                <div class="chart-card">
+                    <h3>Proporsi Pemilih Tema</h3>
+                    <div id="chart-theme-donut"></div>
+                    <div class="legend" id="legend-theme"></div>
+                </div>
             </div>
-        </section>
 
-        <div class="table-wrap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Full Name</th>
-                        <th>Email</th>
-                        <th>Project Title</th>
-                        <th>Project Theme</th>
-                        <th>Team Members</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody"></tbody>
-            </table>
-            <div class="state hidden" id="state"></div>
-        </div>
-    </main>
+            <!-- Grafik baris 2: tren harian + kumulatif -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>Tren Pendaftaran: Harian &amp; Kumulatif</h3>
+                    <div class="legend" style="margin:0 0 0.5rem;">
+                        <span><span class="sw" style="background:var(--t5)"></span>Pendaftaran harian</span>
+                        <span><span class="sw" style="background:var(--t2)"></span>Kumulatif</span>
+                    </div>
+                    <div id="chart-trend"></div>
+                </div>
+            </div>
+
+            <!-- Grafik baris 3: besar tim + jam + jenis email -->
+            <div class="charts-grid row-3">
+                <div class="chart-card">
+                    <h3>Besar Tim</h3>
+                    <div id="chart-team"></div>
+                </div>
+                <div class="chart-card">
+                    <h3>Jam Pendaftaran (WIB)</h3>
+                    <div id="chart-hour"></div>
+                </div>
+                <div class="chart-card">
+                    <h3>Jenis Email Pendaftar</h3>
+                    <div id="chart-email"></div>
+                    <div class="legend" id="legend-email"></div>
+                </div>
+            </div>
+
+            <!-- Tabel pendukung -->
+            <div class="section-title">DATA PENDUKUNG GRAFIK</div>
+            <div class="tables-grid">
+                <table class="support"><thead><tr><th>Tema Proyek</th><th>Jumlah</th><th>Persen</th></tr></thead><tbody id="tbl-theme"></tbody></table>
+                <table class="support"><thead><tr><th>Besar Tim</th><th>Jumlah Tim</th><th>Persen</th></tr></thead><tbody id="tbl-team"></tbody></table>
+                <table class="support"><thead><tr><th>Jenis Email</th><th>Jumlah</th><th>Persen</th></tr></thead><tbody id="tbl-email"></tbody></table>
+            </div>
+
+            <!-- Tabel submission mentah -->
+            <div class="toolbar">
+                <input class="search" id="search" type="search" placeholder="Cari nama, email, proyek, tema...">
+                <span class="updated" id="updated"></span>
+            </div>
+            <div class="table-wrap">
+                <table class="raw">
+                    <thead><tr>
+                        <th>No</th><th>Nama</th><th>Email</th><th>Judul Proyek</th><th>Tema</th><th>Anggota Tim</th><th>Deskripsi</th><th>Waktu (WIB)</th>
+                    </tr></thead>
+                    <tbody id="raw-body"></tbody>
+                </table>
+                <div class="state hidden" id="state"></div>
+            </div>
+        </main>
+    </div>
 
     <script>
         const API_URL = "https://pindai-hackathon-api.vercel.app/api/live-submissions";
-        const POLL_MS = 10000;
+        const POLL_MS = 15000;
         const KEY_STORAGE = "dashboard_key";
+        const SVG_NS = "http://www.w3.org/2000/svg";
 
+        const THEMES = [
+            { key: "1. Education & Future Skills", short: "1. Education & Future Skills", color: "#3B82F6" },
+            { key: "2. SME & Local Economy", short: "2. SME & Local Economy", color: "#F59E0B" },
+            { key: "3. Agriculture & Food", short: "3. Agriculture & Food", color: "#22C55E" },
+            { key: "4. Health & Aging Society", short: "4. Health & Aging Society", color: "#EF4444" },
+            { key: "5. Smart Mobility & Cities", short: "5. Smart Mobility & Cities", color: "#8B5CF6" },
+            { key: "6. Resilient Communities", short: "6. Resilient Communities", color: "#14B8A6" },
+        ];
+        const EMAIL_COLORS = { Gmail: "#3B82F6", "Hotmail / Outlook / lainnya": "#F59E0B", "Email institusi / domain lain": "#22C55E" };
+        const TEAM_COLOR = "#14B8A6";
+
+        // ---- Elemen ----
         const gate = document.getElementById("gate");
         const dashboard = document.getElementById("dashboard");
         const keyInput = document.getElementById("key-input");
         const keyBtn = document.getElementById("key-btn");
         const gateErr = document.getElementById("gate-err");
-        const tbody = document.getElementById("tbody");
-        const stateBox = document.getElementById("state");
-        const totalEl = document.getElementById("total");
-        const updatedEl = document.getElementById("updated");
-        const searchEl = document.getElementById("search");
         const dot = document.getElementById("dot");
         const liveText = document.getElementById("live-text");
+        const searchEl = document.getElementById("search");
+        const updatedEl = document.getElementById("updated");
+        const rawBody = document.getElementById("raw-body");
+        const stateBox = document.getElementById("state");
 
-        let timer = null;
-        let allRows = [];
-        let seenNos = new Set();
-        let firstLoad = true;
-        let inFlight = false;
+        let timer = null, inFlight = false, allRows = [];
 
         function getKey() { return sessionStorage.getItem(KEY_STORAGE) || ""; }
 
-        function showGate(message) {
-            stopPolling();
-            dashboard.classList.add("hidden");
-            gate.classList.remove("hidden");
-            gateErr.textContent = message || "";
-            keyInput.focus();
+        // ---- Util SVG ----
+        function el(tag, attrs, text) {
+            const n = document.createElementNS(SVG_NS, tag);
+            for (const k in attrs) n.setAttribute(k, attrs[k]);
+            if (text != null) n.textContent = text;
+            return n;
+        }
+        function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+        // ---- Konversi waktu ke WIB (UTC+7) ----
+        function toWIB(iso) {
+            if (!iso) return null;
+            const d = new Date(iso);
+            if (isNaN(d)) return null;
+            // geser +7 jam, lalu baca komponen UTC-nya = waktu WIB
+            return new Date(d.getTime() + 7 * 3600 * 1000);
+        }
+        function dayKey(wib) { return wib.toISOString().slice(0, 10); }
+        function dayLabel(wib) {
+            const m = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+            return String(wib.getUTCDate()).padStart(2, "0") + " " + m[wib.getUTCMonth()];
         }
 
-        function showDashboard() {
-            gate.classList.add("hidden");
-            dashboard.classList.remove("hidden");
+        // ---- Agregasi ----
+        function countMembers(s) {
+            if (!s) return 0;
+            return String(s).split(",").map(x => x.trim()).filter(Boolean).length;
+        }
+        function emailType(email) {
+            const e = String(email || "").toLowerCase();
+            const domain = e.split("@")[1] || "";
+            if (domain === "gmail.com") return "Gmail";
+            if (["hotmail.com","outlook.com","live.com","yahoo.com","icloud.com"].includes(domain)) return "Hotmail / Outlook / lainnya";
+            return "Email institusi / domain lain";
         }
 
-        function setLive(ok, text) {
-            dot.classList.toggle("off", !ok);
-            liveText.textContent = text;
+        function aggregate(rows) {
+            const total = rows.length;
+
+            // Tema
+            const theme = new Map(THEMES.map(t => [t.key, 0]));
+            let themeOther = 0;
+            // Besar tim
+            const team = { 1:0, 2:0, 3:0, 4:0, 5:0 };
+            let members = 0;
+            // Email
+            const email = { "Gmail":0, "Hotmail / Outlook / lainnya":0, "Email institusi / domain lain":0 };
+            const uniqEmail = new Set();
+            // Tren harian + jam
+            const perDay = new Map();
+            const perHour = new Array(24).fill(0);
+
+            for (const r of rows) {
+                const k = String(r.project_theme || "").trim();
+                if (theme.has(k)) theme.set(k, theme.get(k) + 1); else themeOther++;
+
+                const m = countMembers(r.team_members);
+                members += m;
+                if (m >= 1 && m <= 5) team[m]++;
+
+                email[emailType(r.email)]++;
+                if (r.email) uniqEmail.add(String(r.email).toLowerCase());
+
+                const wib = toWIB(r.created_at);
+                if (wib) {
+                    const dk = dayKey(wib);
+                    perDay.set(dk, (perDay.get(dk) || 0) + 1);
+                    perHour[wib.getUTCHours()]++;
+                }
+            }
+
+            // Tema terpopuler
+            let topTheme = null, topCount = -1;
+            for (const t of THEMES) { const c = theme.get(t.key); if (c > topCount) { topCount = c; topTheme = t; } }
+
+            // Tren: susun tanggal urut
+            const days = Array.from(perDay.keys()).sort();
+            let cum = 0;
+            const trend = days.map(dk => {
+                const count = perDay.get(dk);
+                cum += count;
+                const wib = new Date(dk + "T00:00:00Z");
+                return { dk, label: dayLabel(wib), daily: count, cumulative: cum };
+            });
+            // Puncak harian
+            let peak = { daily: 0, label: "-" };
+            for (const t of trend) if (t.daily > peak.daily) peak = t;
+
+            return {
+                total, theme, themeOther, team, members, email,
+                uniqEmail: uniqEmail.size,
+                avgMembers: total ? (members / total) : 0,
+                topTheme, topCount, trend, perHour, peak,
+            };
         }
 
-        function cell(text, cls) {
+        // ---- Render kartu ringkasan ----
+        function renderSummary(a) {
+            const box = document.getElementById("summary-cards");
+            box.textContent = "";
+            const items = [
+                { label: "Total Proyek Terdaftar", value: a.total.toLocaleString("id-ID"), sub: "proyek", c: "#1E293B" },
+                { label: "Total Anggota Tim", value: a.members.toLocaleString("id-ID"), sub: "nama anggota tercantum", c: "#3B82F6" },
+                { label: "Rata-rata Anggota / Tim", value: a.avgMembers.toFixed(1).replace(".", ","), sub: "orang per tim", c: "#8B5CF6" },
+                { label: "Email Unik", value: a.uniqEmail.toLocaleString("id-ID"), sub: "dari total entri", c: "#14B8A6" },
+                { label: "Tema Terpopuler", value: a.topTheme ? a.topTheme.short : "-", sub: a.topCount + " proyek", c: "#F59E0B", small: true },
+                { label: "Puncak Pendaftaran / Hari", value: String(a.peak.daily), sub: "pada " + a.peak.label, c: "#E60000" },
+            ];
+            for (const it of items) {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.style.setProperty("--c", it.c);
+                const l = document.createElement("div"); l.className = "label"; l.textContent = it.label;
+                const v = document.createElement("div"); v.className = "value"; v.textContent = it.value;
+                if (it.small) v.style.fontSize = "0.95rem";
+                const s = document.createElement("div"); s.className = "sub"; s.textContent = it.sub;
+                card.append(l, v, s);
+                box.appendChild(card);
+            }
+        }
+
+        // ---- Render kartu per tema ----
+        function renderThemeCards(a) {
+            const box = document.getElementById("theme-cards");
+            box.textContent = "";
+            for (const t of THEMES) {
+                const c = a.theme.get(t.key);
+                const pct = a.total ? (c / a.total * 100) : 0;
+                const card = document.createElement("div");
+                card.className = "card";
+                card.style.setProperty("--c", t.color);
+                const l = document.createElement("div"); l.className = "label"; l.textContent = t.short;
+                const v = document.createElement("div"); v.className = "value"; v.textContent = c;
+                const s = document.createElement("div"); s.className = "sub"; s.textContent = pct.toFixed(1).replace(".", ",") + "% dari total";
+                card.append(l, v, s);
+                box.appendChild(card);
+            }
+        }
+
+        // ---- Bar horizontal: jumlah per tema ----
+        function renderThemeBar(a) {
+            const host = document.getElementById("chart-theme-bar");
+            clear(host);
+            const W = 440, rowH = 34, padL = 50, padR = 50, padT = 10;
+            const H = padT + THEMES.length * rowH + 10;
+            const svg = el("svg", { viewBox: `0 0 ${W} ${H}` });
+            const max = Math.max(1, ...THEMES.map(t => a.theme.get(t.key)));
+            const barMax = W - padL - padR;
+            THEMES.forEach((t, i) => {
+                const val = a.theme.get(t.key);
+                const w = (val / max) * barMax;
+                const y = padT + i * rowH;
+                svg.appendChild(el("rect", { x: padL, y: y + 6, width: w, height: rowH - 14, rx: 3, fill: t.color }));
+                const lab = el("text", { x: padL + w + 6, y: y + rowH / 2 + 2, class: "bar-label" }, String(val));
+                svg.appendChild(lab);
+                svg.appendChild(el("text", { x: padL - 6, y: y + rowH / 2 + 2, class: "axis-text", "text-anchor": "end" }, String(t.key.split(".")[0])));
+            });
+            host.appendChild(svg);
+        }
+
+        // ---- Donut: proporsi tema ----
+        function renderThemeDonut(a) {
+            const host = document.getElementById("chart-theme-donut");
+            clear(host);
+            const svg = el("svg", { viewBox: "0 0 42 42" });
+            svg.setAttribute("style", "max-width:230px;margin:0 auto;transform:rotate(-90deg)");
+            svg.appendChild(el("circle", { cx: 21, cy: 21, r: 15.9155, fill: "none", stroke: "#EEF2F7", "stroke-width": 5 }));
+            let offset = 0;
+            if (a.total > 0) {
+                for (const t of THEMES) {
+                    const c = a.theme.get(t.key);
+                    if (!c) continue;
+                    const pct = c / a.total * 100;
+                    svg.appendChild(el("circle", {
+                        cx: 21, cy: 21, r: 15.9155, fill: "none", stroke: t.color, "stroke-width": 5,
+                        "stroke-dasharray": pct + " " + (100 - pct), "stroke-dashoffset": String(-offset)
+                    }));
+                    offset += pct;
+                }
+            }
+            host.appendChild(svg);
+            // Legend
+            const leg = document.getElementById("legend-theme");
+            leg.textContent = "";
+            for (const t of THEMES) {
+                const c = a.theme.get(t.key);
+                const pct = a.total ? (c / a.total * 100) : 0;
+                const span = document.createElement("span");
+                const sw = document.createElement("span"); sw.className = "sw"; sw.style.background = t.color;
+                span.appendChild(sw);
+                span.appendChild(document.createTextNode(t.key + " (" + pct.toFixed(1).replace(".", ",") + "%)"));
+                leg.appendChild(span);
+            }
+        }
+
+        // ---- Tren harian (bar) + kumulatif (line) ----
+        function renderTrend(a) {
+            const host = document.getElementById("chart-trend");
+            clear(host);
+            const data = a.trend;
+            const W = 1000, H = 300, padL = 40, padR = 45, padT = 15, padB = 40;
+            const svg = el("svg", { viewBox: `0 0 ${W} ${H}` });
+            if (data.length === 0) { host.appendChild(svg); return; }
+
+            const plotW = W - padL - padR, plotH = H - padT - padB;
+            const maxDaily = Math.max(1, ...data.map(d => d.daily));
+            const maxCum = Math.max(1, ...data.map(d => d.cumulative));
+            const stepX = plotW / data.length;
+
+            // grid horizontal
+            for (let g = 0; g <= 4; g++) {
+                const y = padT + (plotH / 4) * g;
+                svg.appendChild(el("line", { x1: padL, y1: y, x2: W - padR, y2: y, class: "grid-line" }));
+                svg.appendChild(el("text", { x: padL - 5, y: y + 3, class: "axis-text", "text-anchor": "end" }, String(Math.round(maxDaily * (1 - g / 4)))));
+                svg.appendChild(el("text", { x: W - padR + 5, y: y + 3, class: "axis-text" }, String(Math.round(maxCum * (1 - g / 4)))));
+            }
+
+            // bar harian
+            data.forEach((d, i) => {
+                const bh = (d.daily / maxDaily) * plotH;
+                const x = padL + i * stepX + stepX * 0.2;
+                const bw = stepX * 0.6;
+                svg.appendChild(el("rect", { x, y: padT + plotH - bh, width: bw, height: bh, fill: "#8B5CF6", rx: 1 }));
+                // label tanggal (tiap 2 hari agar tidak padat)
+                if (i % 2 === 0 || i === data.length - 1) {
+                    svg.appendChild(el("text", {
+                        x: padL + i * stepX + stepX / 2, y: H - padB + 14, class: "axis-text", "text-anchor": "middle",
+                        transform: `rotate(45 ${padL + i * stepX + stepX / 2} ${H - padB + 14})`
+                    }, d.label));
+                }
+            });
+
+            // garis kumulatif
+            let dPath = "";
+            data.forEach((d, i) => {
+                const x = padL + i * stepX + stepX / 2;
+                const y = padT + plotH - (d.cumulative / maxCum) * plotH;
+                dPath += (i === 0 ? "M" : "L") + x.toFixed(1) + " " + y.toFixed(1) + " ";
+            });
+            svg.appendChild(el("path", { d: dPath, fill: "none", stroke: "#F59E0B", "stroke-width": 2.5 }));
+            // titik + label nilai terakhir
+            const last = data[data.length - 1];
+            const lx = padL + (data.length - 1) * stepX + stepX / 2;
+            const ly = padT + plotH - (last.cumulative / maxCum) * plotH;
+            svg.appendChild(el("circle", { cx: lx, cy: ly, r: 3, fill: "#F59E0B" }));
+            svg.appendChild(el("text", { x: lx, y: ly - 7, class: "bar-label", "text-anchor": "middle", fill: "#F59E0B" }, String(last.cumulative)));
+
+            host.appendChild(svg);
+        }
+
+        // ---- Bar vertikal generik ----
+        function renderVBar(hostId, labels, values, color, fmtLabel) {
+            const host = document.getElementById(hostId);
+            clear(host);
+            const W = 340, H = 240, padL = 30, padR = 10, padT = 20, padB = 30;
+            const svg = el("svg", { viewBox: `0 0 ${W} ${H}` });
+            const plotW = W - padL - padR, plotH = H - padT - padB;
+            const max = Math.max(1, ...values);
+            const stepX = plotW / values.length;
+            values.forEach((v, i) => {
+                const bh = (v / max) * plotH;
+                const x = padL + i * stepX + stepX * 0.15;
+                const bw = stepX * 0.7;
+                svg.appendChild(el("rect", { x, y: padT + plotH - bh, width: bw, height: bh, fill: color, rx: 2 }));
+                if (v > 0) svg.appendChild(el("text", { x: x + bw / 2, y: padT + plotH - bh - 4, class: "bar-label", "text-anchor": "middle" }, String(v)));
+                svg.appendChild(el("text", { x: x + bw / 2, y: H - padB + 13, class: "axis-text", "text-anchor": "middle" }, fmtLabel ? fmtLabel(labels[i]) : labels[i]));
+            });
+            host.appendChild(svg);
+        }
+
+        // ---- Pie: jenis email ----
+        function renderEmailPie(a) {
+            const host = document.getElementById("chart-email");
+            clear(host);
+            const svg = el("svg", { viewBox: "0 0 42 42" });
+            svg.setAttribute("style", "max-width:200px;margin:0 auto;transform:rotate(-90deg)");
+            const keys = Object.keys(a.email);
+            let offset = 0;
+            if (a.total > 0) {
+                for (const k of keys) {
+                    const c = a.email[k];
+                    if (!c) continue;
+                    const pct = c / a.total * 100;
+                    // pie penuh: pakai r=15.9155 stroke tebal 31.831 (diameter) -> gunakan lingkaran penuh
+                    svg.appendChild(el("circle", {
+                        cx: 21, cy: 21, r: 10.5, fill: "none", stroke: EMAIL_COLORS[k], "stroke-width": 21,
+                        "stroke-dasharray": (pct * 0.66) + " " + ((100 - pct) * 0.66), "stroke-dashoffset": String(-offset * 0.66)
+                    }));
+                    offset += pct;
+                }
+            }
+            host.appendChild(svg);
+            const leg = document.getElementById("legend-email");
+            leg.textContent = "";
+            for (const k of keys) {
+                const c = a.email[k];
+                const pct = a.total ? (c / a.total * 100) : 0;
+                const span = document.createElement("span");
+                const sw = document.createElement("span"); sw.className = "sw"; sw.style.background = EMAIL_COLORS[k];
+                span.appendChild(sw);
+                span.appendChild(document.createTextNode(k + " (" + pct.toFixed(1).replace(".", ",") + "%)"));
+                leg.appendChild(span);
+            }
+        }
+
+        // ---- Tabel pendukung ----
+        function renderSupportTables(a) {
+            // Tema
+            const tTheme = document.getElementById("tbl-theme"); tTheme.textContent = "";
+            for (const t of THEMES) {
+                const c = a.theme.get(t.key);
+                const pct = a.total ? (c / a.total * 100) : 0;
+                tTheme.appendChild(rowTD([t.key, String(c), pct.toFixed(1).replace(".", ",") + "%"]));
+            }
+            tTheme.appendChild(rowTD(["TOTAL", String(a.total), "100,0%"], true));
+
+            // Besar tim
+            const tTeam = document.getElementById("tbl-team"); tTeam.textContent = "";
+            let teamTotal = 0;
+            for (let i = 1; i <= 5; i++) teamTotal += a.team[i];
+            for (let i = 1; i <= 5; i++) {
+                const c = a.team[i];
+                const pct = teamTotal ? (c / teamTotal * 100) : 0;
+                tTeam.appendChild(rowTD([i + " orang", String(c), pct.toFixed(1).replace(".", ",") + "%"]));
+            }
+            tTeam.appendChild(rowTD(["TOTAL", String(teamTotal), "100,0%"], true));
+
+            // Email
+            const tEmail = document.getElementById("tbl-email"); tEmail.textContent = "";
+            for (const k of Object.keys(a.email)) {
+                const c = a.email[k];
+                const pct = a.total ? (c / a.total * 100) : 0;
+                tEmail.appendChild(rowTD([k, String(c), pct.toFixed(1).replace(".", ",") + "%"]));
+            }
+            tEmail.appendChild(rowTD(["TOTAL", String(a.total), "100,0%"], true));
+        }
+        function rowTD(cells, isTotal) {
+            const tr = document.createElement("tr");
+            if (isTotal) tr.className = "total";
+            cells.forEach(c => { const td = document.createElement("td"); td.textContent = c; tr.appendChild(td); });
+            return tr;
+        }
+
+        // ---- Tabel submission mentah ----
+        function renderRaw() {
+            const q = searchEl.value.trim().toLowerCase();
+            const rows = allRows.filter(r => !q || [r.full_name, r.email, r.project_title, r.project_theme, r.team_members, r.description]
+                .some(v => String(v || "").toLowerCase().includes(q)));
+            rawBody.textContent = "";
+            const frag = document.createDocumentFragment();
+            for (const r of rows) {
+                const tr = document.createElement("tr");
+                tr.appendChild(cellTD(r.no, "no"));
+                tr.appendChild(cellTD(r.full_name));
+                tr.appendChild(cellTD(r.email, "muted"));
+                tr.appendChild(cellTD(r.project_title));
+                tr.appendChild(cellTD(r.project_theme, "muted"));
+                tr.appendChild(cellTD(r.team_members, "muted"));
+                tr.appendChild(cellTD(r.description, "desc"));
+                const wib = toWIB(r.created_at);
+                tr.appendChild(cellTD(wib ? (dayLabel(wib) + " " + String(wib.getUTCHours()).padStart(2,"0") + ":" + String(wib.getUTCMinutes()).padStart(2,"0")) : "-", "muted"));
+                frag.appendChild(tr);
+            }
+            rawBody.appendChild(frag);
+            if (rows.length === 0) { stateBox.textContent = allRows.length === 0 ? "Belum ada submission." : "Tidak ada hasil pencarian."; stateBox.classList.remove("hidden"); }
+            else stateBox.classList.add("hidden");
+        }
+        function cellTD(text, cls) {
             const td = document.createElement("td");
             if (cls) td.className = cls;
-            // textContent: data peserta tidak pernah diperlakukan sebagai HTML (aman dari XSS).
             td.textContent = text == null ? "" : String(text);
             return td;
         }
 
-        // ---- Grafik distribusi tema ----
-        const THEMES = [
-            { key: "1. Education & Future Skills", color: "#00F0FF" },
-            { key: "2. SME & Local Economy", color: "#FF9900" },
-            { key: "3. Agriculture & Food", color: "#4ADE80" },
-            { key: "4. Health & Aging Society", color: "#F87171" },
-            { key: "5. Smart Mobility & Cities", color: "#A78BFA" },
-            { key: "6. Resilient Communities", color: "#FACC15" },
-        ];
-        const OTHER_COLOR = "#64748B";
-        const SVG_NS = "http://www.w3.org/2000/svg";
+        function renderAll() {
+            const a = aggregate(allRows);
+            renderSummary(a);
+            renderThemeCards(a);
+            renderThemeBar(a);
+            renderThemeDonut(a);
+            renderTrend(a);
+            renderVBar("chart-team", ["1","2","3","4","5"], [a.team[1],a.team[2],a.team[3],a.team[4],a.team[5]], TEAM_COLOR, (l) => l + " org");
+            renderVBar("chart-hour", Array.from({length:24},(_,i)=>i), a.perHour, "#8B5CF6", (l) => String(l).padStart(2,"0"));
+            renderEmailPie(a);
+            renderSupportTables(a);
+            renderRaw();
 
-        function computeThemeStats(rows) {
-            const counts = new Map(THEMES.map((t) => [t.key, 0]));
-            let other = 0;
-            for (const r of rows) {
-                const k = String(r.project_theme || "").trim();
-                if (counts.has(k)) counts.set(k, counts.get(k) + 1);
-                else other++;
-            }
-            const stats = THEMES.map((t) => ({ name: t.key, color: t.color, count: counts.get(t.key) }));
-            if (other > 0) stats.push({ name: "Other", color: OTHER_COLOR, count: other });
-            return stats;
-        }
-
-        function renderChart(rows) {
-            const total = rows.length;
-            const stats = computeThemeStats(rows);
-
-            document.getElementById("donut-total").textContent = total;
-
-            // Donut: lingkaran r=15.9155 punya keliling 100, jadi stroke-dasharray langsung dalam persen.
-            const svg = document.getElementById("donut");
-            svg.textContent = "";
-
-            const track = document.createElementNS(SVG_NS, "circle");
-            track.setAttribute("cx", "21");
-            track.setAttribute("cy", "21");
-            track.setAttribute("r", "15.9155");
-            track.setAttribute("fill", "none");
-            track.setAttribute("stroke", "#0F1522");
-            track.setAttribute("stroke-width", "6");
-            svg.appendChild(track);
-
-            let offset = 0;
-            if (total > 0) {
-                for (const s of stats) {
-                    if (s.count === 0) continue;
-                    const pct = (s.count / total) * 100;
-                    const seg = document.createElementNS(SVG_NS, "circle");
-                    seg.setAttribute("cx", "21");
-                    seg.setAttribute("cy", "21");
-                    seg.setAttribute("r", "15.9155");
-                    seg.setAttribute("fill", "none");
-                    seg.setAttribute("stroke", s.color);
-                    seg.setAttribute("stroke-width", "6");
-                    seg.setAttribute("stroke-dasharray", pct + " " + (100 - pct));
-                    seg.setAttribute("stroke-dashoffset", String(-offset));
-                    svg.appendChild(seg);
-                    offset += pct;
-                }
-            }
-
-            // Legenda + bar persentase
-            const legend = document.getElementById("legend");
-            legend.textContent = "";
-            for (const s of stats) {
-                const pct = total > 0 ? (s.count / total) * 100 : 0;
-
-                const row = document.createElement("div");
-                row.className = "legend-row";
-
-                const top = document.createElement("div");
-                top.className = "legend-top";
-
-                const name = document.createElement("span");
-                name.className = "legend-name";
-                const sw = document.createElement("span");
-                sw.className = "legend-swatch";
-                sw.style.background = s.color;
-                const label = document.createElement("span");
-                label.textContent = s.name;
-                name.appendChild(sw);
-                name.appendChild(label);
-
-                const val = document.createElement("span");
-                val.className = "legend-val";
-                const strong = document.createElement("strong");
-                strong.textContent = s.count;
-                val.appendChild(strong);
-                val.appendChild(document.createTextNode(pct.toFixed(1) + "%"));
-
-                top.appendChild(name);
-                top.appendChild(val);
-
-                const bar = document.createElement("div");
-                bar.className = "legend-bar";
-                const fill = document.createElement("span");
-                fill.style.width = pct + "%";
-                fill.style.background = s.color;
-                bar.appendChild(fill);
-
-                row.appendChild(top);
-                row.appendChild(bar);
-                legend.appendChild(row);
+            // Header meta periode
+            if (a.trend.length) {
+                document.getElementById("header-meta").textContent =
+                    "Sumber: Neon DB (live) \u2022 Periode " + a.trend[0].label + " \u2013 " + a.trend[a.trend.length-1].label + " \u2022 Waktu dalam WIB (UTC+7)";
             }
         }
 
-        function render() {
-            const q = searchEl.value.trim().toLowerCase();
-            const rows = allRows
-                .filter((r) => !q || [r.full_name, r.email, r.project_title, r.project_theme, r.team_members, r.description]
-                    .some((v) => String(v || "").toLowerCase().includes(q))); // urut naik: No 1 di atas, terbaru di bawah
-
-            tbody.textContent = "";
-            const frag = document.createDocumentFragment();
-
-            for (const r of rows) {
-                const tr = document.createElement("tr");
-                if (!firstLoad && !seenNos.has(r.no)) tr.className = "new-row";
-                tr.appendChild(cell(r.no, "no"));
-                tr.appendChild(cell(r.full_name));
-                tr.appendChild(cell(r.email, "muted"));
-                tr.appendChild(cell(r.project_title));
-                tr.appendChild(cell(r.project_theme, "muted"));
-                tr.appendChild(cell(r.team_members, "muted"));
-                tr.appendChild(cell(r.description, "desc"));
-                frag.appendChild(tr);
-            }
-            tbody.appendChild(frag);
-
-            if (rows.length === 0) {
-                stateBox.textContent = allRows.length === 0 ? "No submissions yet." : "No results match your search.";
-                stateBox.classList.remove("hidden");
-            } else {
-                stateBox.classList.add("hidden");
-            }
-        }
-
+        // ---- Fetch & polling ----
         async function load() {
             if (inFlight) return;
             inFlight = true;
             try {
                 const res = await fetch(API_URL, { headers: { "x-dashboard-key": getKey() }, cache: "no-store" });
-
-                if (res.status === 401) {
-                    sessionStorage.removeItem(KEY_STORAGE);
-                    showGate("Incorrect key. Please try again.");
-                    return;
-                }
-                if (res.status === 503) {
-                    showGate("Dashboard is not configured yet (DASHBOARD_KEY is not set on the server).");
-                    return;
-                }
+                if (res.status === 401) { sessionStorage.removeItem(KEY_STORAGE); showGate("Key salah. Coba lagi."); return; }
+                if (res.status === 503) { showGate("Dashboard belum dikonfigurasi (DASHBOARD_KEY belum diset)."); return; }
                 if (!res.ok) throw new Error("HTTP " + res.status);
-
                 const data = await res.json();
-                const list = Array.isArray(data.submissions) ? data.submissions : [];
-
+                allRows = Array.isArray(data.submissions) ? data.submissions : [];
                 showDashboard();
-                allRows = list;
-                totalEl.textContent = data.total != null ? data.total : list.length;
-                renderChart(list); // grafik selalu pakai semua data, tidak terpengaruh pencarian
-                render();
-
-                seenNos = new Set(list.map((r) => r.no));
-                firstLoad = false;
-
-                updatedEl.textContent = "Last updated " + new Date().toLocaleTimeString();
+                renderAll();
+                updatedEl.textContent = "Diperbarui " + new Date().toLocaleTimeString("id-ID");
                 setLive(true, "Live");
-            } catch (err) {
-                console.error(err);
-                setLive(false, "Connection problem, retrying...");
-            } finally {
-                inFlight = false;
-            }
+            } catch (e) {
+                console.error(e);
+                setLive(false, "Koneksi bermasalah, mencoba lagi...");
+            } finally { inFlight = false; }
         }
 
-        function startPolling() {
-            stopPolling();
-            load();
-            timer = setInterval(() => { if (!document.hidden) load(); }, POLL_MS);
-        }
+        function startPolling() { stopPolling(); load(); timer = setInterval(() => { if (!document.hidden) load(); }, POLL_MS); }
+        function stopPolling() { if (timer) { clearInterval(timer); timer = null; } }
+        function showGate(msg) { stopPolling(); dashboard.classList.add("hidden"); gate.classList.remove("hidden"); gateErr.textContent = msg || ""; keyInput.focus(); }
+        function showDashboard() { gate.classList.add("hidden"); dashboard.classList.remove("hidden"); }
+        function setLive(ok, text) { dot.classList.toggle("off", !ok); liveText.textContent = text; }
 
-        function stopPolling() {
-            if (timer) { clearInterval(timer); timer = null; }
-        }
-
-        // Saat tab kembali aktif, langsung refresh.
-        document.addEventListener("visibilitychange", () => {
-            if (!document.hidden && timer) load();
-        });
-
-        searchEl.addEventListener("input", render);
+        document.addEventListener("visibilitychange", () => { if (!document.hidden && timer) load(); });
+        searchEl.addEventListener("input", renderRaw);
 
         function submitKey() {
             const k = keyInput.value.trim();
-            if (!k) { gateErr.textContent = "Please enter the key."; return; }
+            if (!k) { gateErr.textContent = "Masukkan key."; return; }
             sessionStorage.setItem(KEY_STORAGE, k);
-            keyInput.value = "";
-            gateErr.textContent = "";
-            firstLoad = true;
+            keyInput.value = ""; gateErr.textContent = "";
             startPolling();
         }
-
         keyBtn.addEventListener("click", submitKey);
         keyInput.addEventListener("keydown", (e) => { if (e.key === "Enter") submitKey(); });
 
-        // Jika key sudah tersimpan di sesi ini, langsung muat.
-        if (getKey()) { startPolling(); } else { showGate(""); }
+        if (getKey()) startPolling(); else showGate("");
     </script>
 </body>
 
