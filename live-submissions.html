@@ -223,7 +223,7 @@
     <!-- Dashboard -->
     <main id="dashboard" class="hidden">
         <h1>Live Submissions</h1>
-        <p class="sub">Updates automatically every 10 seconds. Newest submissions appear first.</p>
+        <p class="sub">Updates automatically every 10 seconds. Newest submissions appear at the bottom.</p>
 
         <div class="toolbar">
             <div class="counter"><strong id="total">0</strong>submissions</div>
@@ -306,9 +306,7 @@
             const q = searchEl.value.trim().toLowerCase();
             const rows = allRows
                 .filter((r) => !q || [r.full_name, r.email, r.project_title, r.project_theme, r.team_members, r.description]
-                    .some((v) => String(v || "").toLowerCase().includes(q)))
-                .slice()
-                .reverse(); // terbaru di atas
+                    .some((v) => String(v || "").toLowerCase().includes(q))); // urut naik: No 1 di atas, terbaru di bawah
 
             tbody.textContent = "";
             const frag = document.createDocumentFragment();
