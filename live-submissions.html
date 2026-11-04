@@ -152,6 +152,74 @@
             100% { background: transparent; }
         }
 
+        /* Panel grafik distribusi tema */
+        .chart-panel {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .chart-panel h2 {
+            margin: 0 0 0.2rem;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .chart-panel .chart-sub {
+            margin: 0 0 1.1rem;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        .chart-body {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .donut-wrap {
+            position: relative;
+            width: 190px;
+            height: 190px;
+            flex-shrink: 0;
+        }
+
+        .donut-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+
+        .donut-center {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .donut-center strong { font-size: 1.9rem; font-weight: 800; color: var(--cyan); line-height: 1; }
+        .donut-center span { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+
+        .legend { flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 0.7rem; }
+
+        .legend-row .legend-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            font-size: 0.82rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .legend-name { display: flex; align-items: center; gap: 0.5rem; color: var(--text); }
+        .legend-swatch { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+        .legend-val { color: var(--muted); white-space: nowrap; }
+        .legend-val strong { color: var(--text); margin-right: 0.35rem; }
+
+        .legend-bar { height: 7px; background: #0F1522; border-radius: 99px; overflow: hidden; }
+        .legend-bar > span { display: block; height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+
         .state {
             padding: 3rem 1rem;
             text-align: center;
@@ -231,6 +299,18 @@
             <span class="updated" id="updated"></span>
         </div>
 
+        <section class="chart-panel" aria-labelledby="chart-title">
+            <h2 id="chart-title">Submissions by Project Theme</h2>
+            <p class="chart-sub">Distribution of all submissions across the six themes.</p>
+            <div class="chart-body">
+                <div class="donut-wrap">
+                    <svg viewBox="0 0 42 42" id="donut" role="img" aria-label="Donut chart of submissions by theme"></svg>
+                    <div class="donut-center"><strong id="donut-total">0</strong><span>total</span></div>
+                </div>
+                <div class="legend" id="legend"></div>
+            </div>
+        </section>
+
         <div class="table-wrap">
             <table>
                 <thead>
@@ -302,6 +382,114 @@
             return td;
         }
 
+        // ---- Grafik distribusi tema ----
+        const THEMES = [
+            { key: "1. Education & Future Skills", color: "#00F0FF" },
+            { key: "2. SME & Local Economy", color: "#FF9900" },
+            { key: "3. Agriculture & Food", color: "#4ADE80" },
+            { key: "4. Health & Aging Society", color: "#F87171" },
+            { key: "5. Smart Mobility & Cities", color: "#A78BFA" },
+            { key: "6. Resilient Communities", color: "#FACC15" },
+        ];
+        const OTHER_COLOR = "#64748B";
+        const SVG_NS = "http://www.w3.org/2000/svg";
+
+        function computeThemeStats(rows) {
+            const counts = new Map(THEMES.map((t) => [t.key, 0]));
+            let other = 0;
+            for (const r of rows) {
+                const k = String(r.project_theme || "").trim();
+                if (counts.has(k)) counts.set(k, counts.get(k) + 1);
+                else other++;
+            }
+            const stats = THEMES.map((t) => ({ name: t.key, color: t.color, count: counts.get(t.key) }));
+            if (other > 0) stats.push({ name: "Other", color: OTHER_COLOR, count: other });
+            return stats;
+        }
+
+        function renderChart(rows) {
+            const total = rows.length;
+            const stats = computeThemeStats(rows);
+
+            document.getElementById("donut-total").textContent = total;
+
+            // Donut: lingkaran r=15.9155 punya keliling 100, jadi stroke-dasharray langsung dalam persen.
+            const svg = document.getElementById("donut");
+            svg.textContent = "";
+
+            const track = document.createElementNS(SVG_NS, "circle");
+            track.setAttribute("cx", "21");
+            track.setAttribute("cy", "21");
+            track.setAttribute("r", "15.9155");
+            track.setAttribute("fill", "none");
+            track.setAttribute("stroke", "#0F1522");
+            track.setAttribute("stroke-width", "6");
+            svg.appendChild(track);
+
+            let offset = 0;
+            if (total > 0) {
+                for (const s of stats) {
+                    if (s.count === 0) continue;
+                    const pct = (s.count / total) * 100;
+                    const seg = document.createElementNS(SVG_NS, "circle");
+                    seg.setAttribute("cx", "21");
+                    seg.setAttribute("cy", "21");
+                    seg.setAttribute("r", "15.9155");
+                    seg.setAttribute("fill", "none");
+                    seg.setAttribute("stroke", s.color);
+                    seg.setAttribute("stroke-width", "6");
+                    seg.setAttribute("stroke-dasharray", pct + " " + (100 - pct));
+                    seg.setAttribute("stroke-dashoffset", String(-offset));
+                    svg.appendChild(seg);
+                    offset += pct;
+                }
+            }
+
+            // Legenda + bar persentase
+            const legend = document.getElementById("legend");
+            legend.textContent = "";
+            for (const s of stats) {
+                const pct = total > 0 ? (s.count / total) * 100 : 0;
+
+                const row = document.createElement("div");
+                row.className = "legend-row";
+
+                const top = document.createElement("div");
+                top.className = "legend-top";
+
+                const name = document.createElement("span");
+                name.className = "legend-name";
+                const sw = document.createElement("span");
+                sw.className = "legend-swatch";
+                sw.style.background = s.color;
+                const label = document.createElement("span");
+                label.textContent = s.name;
+                name.appendChild(sw);
+                name.appendChild(label);
+
+                const val = document.createElement("span");
+                val.className = "legend-val";
+                const strong = document.createElement("strong");
+                strong.textContent = s.count;
+                val.appendChild(strong);
+                val.appendChild(document.createTextNode(pct.toFixed(1) + "%"));
+
+                top.appendChild(name);
+                top.appendChild(val);
+
+                const bar = document.createElement("div");
+                bar.className = "legend-bar";
+                const fill = document.createElement("span");
+                fill.style.width = pct + "%";
+                fill.style.background = s.color;
+                bar.appendChild(fill);
+
+                row.appendChild(top);
+                row.appendChild(bar);
+                legend.appendChild(row);
+            }
+        }
+
         function render() {
             const q = searchEl.value.trim().toLowerCase();
             const rows = allRows
@@ -356,6 +544,7 @@
                 showDashboard();
                 allRows = list;
                 totalEl.textContent = data.total != null ? data.total : list.length;
+                renderChart(list); // grafik selalu pakai semua data, tidak terpengaruh pencarian
                 render();
 
                 seenNos = new Set(list.map((r) => r.no));
