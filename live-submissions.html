@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>AI For All Hackathon — Live Submissions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #E60000;
+            --dark-red: #B30000;
+            --cyan: #00F0FF;
+            --bg: #0A0E17;
+            --card: #121824;
+            --border: #1E293B;
+            --text: #F8FAFC;
+            --muted: #94A3B8;
+            --green: #4ADE80;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .topbar {
+            background: #0A0E17;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .brand {
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--red), var(--cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .live {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+            animation: pulse 2s infinite;
+        }
+
+        .dot.off { background: #F87171; animation: none; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.6); }
+            70% { box-shadow: 0 0 0 9px rgba(74, 222, 128, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        }
+
+        main { max-width: 1300px; margin: 0 auto; padding: 1.5rem; }
+
+        h1 { margin: 0 0 0.25rem; font-size: 1.6rem; font-weight: 800; }
+        .sub { color: var(--muted); font-size: 0.9rem; margin: 0 0 1.25rem; }
+
+        .toolbar {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .counter {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.55rem 1rem;
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+        .counter strong { color: var(--cyan); font-size: 1.1rem; margin-right: 0.35rem; }
+
+        .search {
+            flex: 1;
+            min-width: 200px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.65rem 1rem;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .search:focus { outline: none; border-color: var(--cyan); }
+
+        .updated { font-size: 0.78rem; color: var(--muted); }
+
+        .table-wrap {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow-x: auto;
+        }
+
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+
+        th, td {
+            text-align: left;
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+            vertical-align: top;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+            background: #0F1522;
+            color: var(--cyan);
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        td { color: var(--text); word-break: break-word; }
+        td.muted { color: var(--muted); }
+        td.no { color: var(--cyan); font-weight: 700; white-space: nowrap; }
+        td.desc { color: var(--muted); max-width: 380px; }
+
+        tr.new-row { animation: flash 2.5s ease-out; }
+
+        @keyframes flash {
+            0% { background: rgba(0, 240, 255, 0.22); }
+            100% { background: transparent; }
+        }
+
+        .state {
+            padding: 3rem 1rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        /* Login */
+        .gate {
+            max-width: 420px;
+            margin: 12vh auto 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-top: 4px solid var(--red);
+            border-radius: 14px;
+            padding: 2rem;
+        }
+        .gate h2 { margin: 0 0 0.4rem; }
+        .gate p { margin: 0 0 1.25rem; color: var(--muted); font-size: 0.88rem; }
+        .gate input {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+        }
+        .gate input:focus { outline: none; border-color: var(--cyan); }
+        .gate button {
+            width: 100%;
+            background: linear-gradient(90deg, var(--red), var(--dark-red));
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.85rem;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .gate .err { color: #F87171; font-size: 0.82rem; margin-top: 0.75rem; min-height: 1em; }
+
+        .hidden { display: none !important; }
+
+        @media (max-width: 600px) {
+            main { padding: 1rem; }
+            h1 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <span class="brand">AI FOR ALL HACKATHON</span>
+        <span class="live"><span class="dot" id="dot"></span><span id="live-text">Live</span></span>
+    </div>
+
+    <!-- Akses dengan key -->
+    <section class="gate" id="gate">
+        <h2>Live Submissions</h2>
+        <p>Enter the dashboard key to view submissions. This page contains participant data.</p>
+        <input type="password" id="key-input" placeholder="Dashboard key" autocomplete="off">
+        <button type="button" id="key-btn">View dashboard</button>
+        <div class="err" id="gate-err" role="alert"></div>
+    </section>
+
+    <!-- Dashboard -->
+    <main id="dashboard" class="hidden">
+        <h1>Live Submissions</h1>
+        <p class="sub">Updates automatically every 10 seconds. Newest submissions appear first.</p>
+
+        <div class="toolbar">
+            <div class="counter"><strong id="total">0</strong>submissions</div>
+            <input class="search" id="search" type="search" placeholder="Search name, email, project, theme...">
+            <span class="updated" id="updated"></span>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Project Title</th>
+                        <th>Project Theme</th>
+                        <th>Team Members</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+            <div class="state hidden" id="state"></div>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = "https://pindai-hackathon-api.vercel.app/api/live-submissions";
+        const POLL_MS = 10000;
+        const KEY_STORAGE = "dashboard_key";
+
+        const gate = document.getElementById("gate");
+        const dashboard = document.getElementById("dashboard");
+        const keyInput = document.getElementById("key-input");
+        const keyBtn = document.getElementById("key-btn");
+        const gateErr = document.getElementById("gate-err");
+        const tbody = document.getElementById("tbody");
+        const stateBox = document.getElementById("state");
+        const totalEl = document.getElementById("total");
+        const updatedEl = document.getElementById("updated");
+        const searchEl = document.getElementById("search");
+        const dot = document.getElementById("dot");
+        const liveText = document.getElementById("live-text");
+
+        let timer = null;
+        let allRows = [];
+        let seenNos = new Set();
+        let firstLoad = true;
+        let inFlight = false;
+
+        function getKey() { return sessionStorage.getItem(KEY_STORAGE) || ""; }
+
+        function showGate(message) {
+            stopPolling();
+            dashboard.classList.add("hidden");
+            gate.classList.remove("hidden");
+            gateErr.textContent = message || "";
+            keyInput.focus();
+        }
+
+        function showDashboard() {
+            gate.classList.add("hidden");
+            dashboard.classList.remove("hidden");
+        }
+
+        function setLive(ok, text) {
+            dot.classList.toggle("off", !ok);
+            liveText.textContent = text;
+        }
+
+        function cell(text, cls) {
+            const td = document.createElement("td");
+            if (cls) td.className = cls;
+            // textContent: data peserta tidak pernah diperlakukan sebagai HTML (aman dari XSS).
+            td.textContent = text == null ? "" : String(text);
+            return td;
+        }
+
+        function render() {
+            const q = searchEl.value.trim().toLowerCase();
+            const rows = allRows
+                .filter((r) => !q || [r.full_name, r.email, r.project_title, r.project_theme, r.team_members, r.description]
+                    .some((v) => String(v || "").toLowerCase().includes(q)))
+                .slice()
+                .reverse(); // terbaru di atas
+
+            tbody.textContent = "";
+            const frag = document.createDocumentFragment();
+
+            for (const r of rows) {
+                const tr = document.createElement("tr");
+                if (!firstLoad && !seenNos.has(r.no)) tr.className = "new-row";
+                tr.appendChild(cell(r.no, "no"));
+                tr.appendChild(cell(r.full_name));
+                tr.appendChild(cell(r.email, "muted"));
+                tr.appendChild(cell(r.project_title));
+                tr.appendChild(cell(r.project_theme, "muted"));
+                tr.appendChild(cell(r.team_members, "muted"));
+                tr.appendChild(cell(r.description, "desc"));
+                frag.appendChild(tr);
+            }
+            tbody.appendChild(frag);
+
+            if (rows.length === 0) {
+                stateBox.textContent = allRows.length === 0 ? "No submissions yet." : "No results match your search.";
+                stateBox.classList.remove("hidden");
+            } else {
+                stateBox.classList.add("hidden");
+            }
+        }
+
+        async function load() {
+            if (inFlight) return;
+            inFlight = true;
+            try {
+                const res = await fetch(API_URL, { headers: { "x-dashboard-key": getKey() }, cache: "no-store" });
+
+                if (res.status === 401) {
+                    sessionStorage.removeItem(KEY_STORAGE);
+                    showGate("Incorrect key. Please try again.");
+                    return;
+                }
+                if (res.status === 503) {
+                    showGate("Dashboard is not configured yet (DASHBOARD_KEY is not set on the server).");
+                    return;
+                }
+                if (!res.ok) throw new Error("HTTP " + res.status);
+
+                const data = await res.json();
+                const list = Array.isArray(data.submissions) ? data.submissions : [];
+
+                showDashboard();
+                allRows = list;
+                totalEl.textContent = data.total != null ? data.total : list.length;
+                render();
+
+                seenNos = new Set(list.map((r) => r.no));
+                firstLoad = false;
+
+                updatedEl.textContent = "Last updated " + new Date().toLocaleTimeString();
+                setLive(true, "Live");
+            } catch (err) {
+                console.error(err);
+                setLive(false, "Connection problem, retrying...");
+            } finally {
+                inFlight = false;
+            }
+        }
+
+        function startPolling() {
+            stopPolling();
+            load();
+            timer = setInterval(() => { if (!document.hidden) load(); }, POLL_MS);
+        }
+
+        function stopPolling() {
+            if (timer) { clearInterval(timer); timer = null; }
+        }
+
+        // Saat tab kembali aktif, langsung refresh.
+        document.addEventListener("visibilitychange", () => {
+            if (!document.hidden && timer) load();
+        });
+
+        searchEl.addEventListener("input", render);
+
+        function submitKey() {
+            const k = keyInput.value.trim();
+            if (!k) { gateErr.textContent = "Please enter the key."; return; }
+            sessionStorage.setItem(KEY_STORAGE, k);
+            keyInput.value = "";
+            gateErr.textContent = "";
+            firstLoad = true;
+            startPolling();
+        }
+
+        keyBtn.addEventListener("click", submitKey);
+        keyInput.addEventListener("keydown", (e) => { if (e.key === "Enter") submitKey(); });
+
+        // Jika key sudah tersimpan di sesi ini, langsung muat.
+        if (getKey()) { startPolling(); } else { showGate(""); }
+    </script>
+</body>
+
+</html>
