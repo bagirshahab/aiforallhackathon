@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hackathon — Top 20 Submission</title>
+    <link rel="stylesheet" href="../submit-project.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .field-hint { display: block; margin-top: 0.4rem; font-size: 0.78rem; color: var(--true-text-muted); }
+        .field-error { display: block; margin-top: 0.4rem; font-size: 0.8rem; color: #F87171; min-height: 1em; }
+        .form-group input.invalid { border-color: #F87171; }
+    </style>
+</head>
+
+<body>
+
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <span class="logo-text">AI FOR ALL HACKATHON</span>
+            </div>
+            <div class="nav-links">
+                <a href="../index.html">ส่งผลงาน / Submit</a>
+                <a href="index.html" class="active">Top 20</a>
+                <a href="../formfeedback.html">แบบฟอร์มประเมิน / Feedback</a>
+            </div>
+        </div>
+    </nav>
+
+    <header id="hero" class="page-hero">
+        <div class="container hero-content">
+            <div class="eyebrow">AI FOR ALL HACKATHON 2026 &bull; TOP 20</div>
+            <h1>ส่งผลงานรอบ Top 20 / Top 20 Submission</h1>
+            <p class="subheadline">
+                กรอกข้อมูลทีม พร้อมลิงก์เว็บไซต์และลิงก์ repository ของโปรเจกต์<br>
+                Fill in your team details with your project's website link and repository link.
+            </p>
+        </div>
+    </header>
+
+    <section id="form-proyek" class="section-light">
+        <div class="container">
+            <div class="form-card card">
+                <form id="top20-form" novalidate>
+
+                    <div class="form-group">
+                        <label for="team_name">ชื่อทีม / Team Name</label>
+                        <input type="text" id="team_name" name="team_name" maxlength="150" placeholder="กรอกชื่อทีม / Enter team name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">อีเมลติดต่อ (หัวหน้าทีม) / Contact Email (Team Leader)</label>
+                        <div class="email-verify-row">
+                            <input type="email" id="email" name="email" placeholder="teamleader@example.com" required>
+                            <button type="button" id="verify-email-btn" class="btn-verify">
+                                ยืนยันอีเมล / Verify
+                            </button>
+                        </div>
+                        <span id="email-verify-status" class="verify-status" aria-live="polite"></span>
+
+                        <div id="otp-block" class="otp-block" hidden>
+                            <label for="otp_code">กรอกรหัส OTP 6 หลักจากอีเมลของคุณ / Enter the 6-digit OTP from your email</label>
+                            <div class="otp-input-row">
+                                <input type="text" id="otp_code" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="______">
+                                <button type="button" id="confirm-otp-btn" class="btn-verify">
+                                    ตรวจสอบรหัส / Confirm
+                                </button>
+                            </div>
+                            <span id="otp-status" class="verify-status" aria-live="polite"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>สมาชิกในทีม (สูงสุด 5 คน) / Team Members (max 5)</label>
+                        <div class="members-inputs">
+                            <input type="text" name="member_1" maxlength="100" placeholder="สมาชิกคนที่ 1 (หัวหน้าทีม) / Member 1 (Leader)" required>
+                            <input type="text" name="member_2" maxlength="100" placeholder="สมาชิกคนที่ 2 / Member 2">
+                            <input type="text" name="member_3" maxlength="100" placeholder="สมาชิกคนที่ 3 / Member 3">
+                            <input type="text" name="member_4" maxlength="100" placeholder="สมาชิกคนที่ 4 / Member 4">
+                            <input type="text" name="member_5" maxlength="100" placeholder="สมาชิกคนที่ 5 / Member 5">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="project_title">ชื่อโปรเจกต์ / Project Title</label>
+                        <input type="text" id="project_title" name="project_title" maxlength="200" placeholder="กรอกชื่อโปรเจกต์ / Enter project title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="website_url">ลิงก์เว็บไซต์ของโปรเจกต์ / Project Website Link</label>
+                        <input type="text" id="website_url" name="website_url" inputmode="url" autocomplete="off" maxlength="300" placeholder="https://myproject.vercel.app" required>
+                        <span class="field-hint">ลิงก์เว็บไซต์ที่เปิดใช้งานได้จริง เริ่มด้วย https:// / A live website link starting with https://</span>
+                        <span class="field-error" id="website_url-error" role="alert"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="repo_url">ลิงก์ Repository ของโปรเจกต์ / Project Repository Link</label>
+                        <input type="text" id="repo_url" name="repo_url" inputmode="url" autocomplete="off" maxlength="300" placeholder="https://github.com/username/repository" required>
+                        <span class="field-hint">รองรับ GitHub, GitLab, Bitbucket, Codeberg / Accepts GitHub, GitLab, Bitbucket, Codeberg</span>
+                        <span class="field-error" id="repo_url-error" role="alert"></span>
+                    </div>
+
+                    <button type="submit" class="btn-primary btn-submit" id="submit-btn" disabled>
+                        <span id="submit-btn-text">ส่งผลงาน / Submit</span>
+                    </button>
+                    <p id="submit-hint" class="submit-hint">
+                        กรุณายืนยันอีเมลก่อนส่งผลงาน / Please verify your email before submitting.
+                    </p>
+
+                    <div id="form-message" class="form-message" role="status" aria-live="polite"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div id="success-modal" class="success-modal" hidden>
+        <div class="success-modal-backdrop"></div>
+        <div class="success-modal-card" role="dialog" aria-modal="true" aria-labelledby="success-modal-title">
+            <div class="success-modal-icon">
+                <svg viewBox="0 0 52 52" width="72" height="72" aria-hidden="true">
+                    <circle class="checkmark-circle" cx="26" cy="26" r="24" fill="none" />
+                    <path class="checkmark-check" fill="none" d="M14 27 l8 8 l16 -18" />
+                </svg>
+            </div>
+            <h2 id="success-modal-title">ส่งผลงานสำเร็จ!<br>Submission Successful!</h2>
+            <p class="success-modal-text">
+                ขอบคุณที่ส่งผลงานรอบ Top 20<br>
+                Thank you for your Top 20 submission.<br>
+                โปรดตรวจสอบอีเมลของคุณเพื่อยืนยัน / Please check your email for confirmation.
+            </p>
+            <button type="button" id="success-modal-close" class="btn-primary">
+                เยี่ยมเลย / Great!
+            </button>
+        </div>
+    </div>
+
+    <footer class="footer-section">
+        <div class="container text-center">
+            <p class="copyright">© 2026 AI For All Hackathon. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="submit-top20.js"></script>
+</body>
+
+</html>
