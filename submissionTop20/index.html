@@ -11,6 +11,12 @@
         .field-hint { display: block; margin-top: 0.4rem; font-size: 0.78rem; color: var(--true-text-muted); }
         .field-error { display: block; margin-top: 0.4rem; font-size: 0.8rem; color: #F87171; min-height: 1em; }
         .form-group input.invalid { border-color: #F87171; }
+        .optional-tag { font-weight: 500; color: var(--true-text-muted); }
+        .choice-row { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+        .form-group .choice { display: flex; align-items: center; gap: 0.5rem; margin: 0; font-weight: 500; font-size: 0.9rem; cursor: pointer; }
+        .form-group .choice input { accent-color: var(--true-red); width: 18px; height: 18px; margin: 0; }
+        .choice-group.invalid .choice-row { outline: 1px solid #F87171; outline-offset: 4px; border-radius: 6px; }
+        .resubmit-note { margin: 0.75rem 0 0; font-size: 0.8rem; color: var(--true-text-muted); text-align: center; }
     </style>
 </head>
 
@@ -46,6 +52,13 @@
                     <div class="form-group">
                         <label for="team_name">ชื่อทีม / Team Name</label>
                         <input type="text" id="team_name" name="team_name" maxlength="150" placeholder="กรอกชื่อทีม / Enter team name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="team_number">หมายเลขทีม / Team Number</label>
+                        <input type="text" id="team_number" name="team_number" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="เช่น / e.g. 7" required>
+                        <span class="field-hint">ใช้หมายเลขเดิมทุกครั้งที่ส่ง เพื่อให้ระบบรู้ว่าเป็นทีมเดียวกัน / Use the same number every time you submit so we know it is the same team.</span>
+                        <span class="field-error" id="team_number-error" role="alert"></span>
                     </div>
 
                     <div class="form-group">
@@ -94,10 +107,33 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="repo_url">ลิงก์ Repository ของโปรเจกต์ / Project Repository Link</label>
-                        <input type="text" id="repo_url" name="repo_url" inputmode="url" autocomplete="off" maxlength="300" placeholder="https://github.com/username/repository" required>
+                        <label for="repo_url">ลิงก์ Repository ของโปรเจกต์ / Project Repository Link <span class="optional-tag">(ไม่บังคับ / Optional)</span></label>
+                        <input type="text" id="repo_url" name="repo_url" inputmode="url" autocomplete="off" maxlength="300" placeholder="https://github.com/username/repository">
                         <span class="field-hint">รองรับ GitHub, GitLab, Bitbucket, Codeberg / Accepts GitHub, GitLab, Bitbucket, Codeberg</span>
                         <span class="field-error" id="repo_url-error" role="alert"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="video_url">ลิงก์วิดีโอ / Video Link <span class="optional-tag">(ไม่บังคับ / Optional)</span></label>
+                        <input type="text" id="video_url" name="video_url" inputmode="url" autocomplete="off" maxlength="300" placeholder="https://youtu.be/...">
+                        <span class="field-hint">เช่น YouTube, Google Drive, Loom / e.g. YouTube, Google Drive, Loom</span>
+                        <span class="field-error" id="video_url-error" role="alert"></span>
+                    </div>
+
+                    <div class="form-group choice-group" id="bedrock-group">
+                        <label>ใช้ Amazon Bedrock หรือไม่ / Amazon Bedrock used</label>
+                        <div class="choice-row">
+                            <label class="choice"><input type="radio" name="bedrock_used" value="yes"> ใช่ / Yes</label>
+                            <label class="choice"><input type="radio" name="bedrock_used" value="no"> ไม่ใช่ / No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group choice-group" id="agentcore-group">
+                        <label>ใช้ AgentCore หรือไม่ / AgentCore used</label>
+                        <div class="choice-row">
+                            <label class="choice"><input type="radio" name="agentcore_used" value="yes"> ใช่ / Yes</label>
+                            <label class="choice"><input type="radio" name="agentcore_used" value="no"> ไม่ใช่ / No</label>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-primary btn-submit" id="submit-btn" disabled>
@@ -105,6 +141,9 @@
                     </button>
                     <p id="submit-hint" class="submit-hint">
                         กรุณายืนยันอีเมลก่อนส่งผลงาน / Please verify your email before submitting.
+                    </p>
+                    <p class="resubmit-note">
+                        ส่งใหม่ได้ ระบบจะใช้ฉบับล่าสุดเท่านั้น / You can resubmit. Only the latest submission is used.
                     </p>
 
                     <div id="form-message" class="form-message" role="status" aria-live="polite"></div>
@@ -126,6 +165,7 @@
             <p class="success-modal-text">
                 ขอบคุณที่ส่งผลงานรอบ Top 20<br>
                 Thank you for your Top 20 submission.<br>
+                ส่งใหม่ได้ ระบบจะใช้ฉบับล่าสุด / You can resubmit; the latest one is used.<br>
                 โปรดตรวจสอบอีเมลของคุณเพื่อยืนยัน / Please check your email for confirmation.
             </p>
             <button type="button" id="success-modal-close" class="btn-primary">
