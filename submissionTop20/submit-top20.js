@@ -29,13 +29,13 @@ const MSG = {
     verified_ok: "✓ อีเมลได้รับการยืนยันแล้ว / Email verified.",
     // ข้อความของลิงก์ / link messages
     web_empty: "กรุณากรอกลิงก์เว็บไซต์ / Please enter the website link.",
-    web_invalid: "ลิงก์เว็บไซต์ไม่ถูกต้อง ต้องเป็นลิงก์เต็มที่ขึ้นต้นด้วย https:// เช่น https://myproject.vercel.app / Invalid website link. It must be a full link starting with https:// (e.g. https://myproject.vercel.app).",
+    web_invalid: "ลิงก์เว็บไซต์ไม่ถูกต้อง ต้องเป็นลิงก์เต็มที่ขึ้นต้นด้วย https:// เช่น https://myproject.example.com / Invalid website link. It must be a full link starting with https:// (e.g. https://myproject.example.com).",
     web_is_repo: "ช่องนี้ต้องเป็นลิงก์เว็บไซต์ ไม่ใช่ลิงก์ repository / This field needs a live website link, not a repository link.",
     video_invalid: "ลิงก์วิดีโอไม่ถูกต้อง ต้องเป็นลิงก์เต็มที่ขึ้นต้นด้วย https:// / Invalid video link. It must be a full link starting with https://.",
     repo_empty: "กรุณากรอกลิงก์ repository / Please enter the repository link.",
     repo_invalid: "ลิงก์ repository ไม่ถูกต้อง ต้องเป็นลิงก์เต็มที่ขึ้นต้นด้วย https:// / Invalid repository link. It must be a full link starting with https://.",
-    repo_not_repo: "ต้องเป็นลิงก์ repository จาก GitHub, GitLab, Bitbucket หรือ Codeberg เท่านั้น / Only GitHub, GitLab, Bitbucket and Codeberg repository links are accepted.",
-    repo_incomplete: "ลิงก์ต้องชี้ไปที่ repository เช่น https://github.com/username/repository / The link must point to a repository, e.g. https://github.com/username/repository.",
+    repo_not_repo: "ต้องเป็นลิงก์ AWS CodeCommit (private repository) เท่านั้น ไม่รับ GitHub, GitLab หรือ Bitbucket / Only AWS CodeCommit (private repository) links are accepted. GitHub, GitLab and Bitbucket are not allowed.",
+    repo_incomplete: "ลิงก์ต้องชี้ไปที่ repository ใน AWS CodeCommit เช่น https://git-codecommit.ap-southeast-1.amazonaws.com/v1/repos/ชื่อ-repo / The link must point to a CodeCommit repository.",
 };
 
 // ---- Validasi link (aturan sama persis dengan server) ----
@@ -69,24 +69,29 @@ function validateWebsiteUrl(raw) {
     return { ok: true, value: u.href };
 }
 
+// Repository: hanya AWS CodeCommit.
+// Diterima: URL clone HTTPS  https://git-codecommit.<region>.amazonaws.com/v1/repos/<nama>
+//           URL console      https://<region>.console.aws.amazon.com/codesuite/codecommit/repositories/<nama>/...
 function validateRepoUrl(raw) {
     const u = parseHttpUrl(raw);
     if (!u || u.protocol !== "https:") return { ok: false, reason: "invalid" };
-    const host = u.hostname.toLowerCase().replace(/^www\./, "");
-    if (!REPO_HOSTS.includes(host)) return { ok: false, reason: "not_repo" };
-    let segs = u.pathname.split("/").filter(Boolean);
-    if (host === "gitlab.com") {
-        const i = segs.indexOf("-");
-        if (i !== -1) segs = segs.slice(0, i);
-    } else {
-        segs = segs.slice(0, 2);
+    const host = u.hostname.toLowerCase();
+    const segs = u.pathname.split("/").filter(Boolean);
+    const nameRe = /^[A-Za-z0-9_.-]{1,100}$/;
+    let m = host.match(/^git-codecommit(?:-fips)?\.([a-z]{2}(?:-[a-z]+)+-\d)\.amazonaws\.com(?:\.cn)?$/);
+    if (m) {
+        if (segs[0] !== "v1" || segs[1] !== "repos" || !segs[2]) return { ok: false, reason: "repo_incomplete" };
+        const name = segs[2].replace(/\.git$/i, "");
+        if (!nameRe.test(name)) return { ok: false, reason: "repo_incomplete" };
+        return { ok: true, value: "https://" + host + "/v1/repos/" + name };
     }
-    if (segs.length < 2) return { ok: false, reason: "repo_incomplete" };
-    segs = segs.map((s, i) => (i === segs.length - 1 ? s.replace(/\.git$/i, "") : s));
-    const nameRe = /^[A-Za-z0-9_.-]+$/;
-    if (!segs.every((s) => s && s !== "." && s !== ".." && nameRe.test(s))) return { ok: false, reason: "repo_incomplete" };
-    if (host === "github.com" && GITHUB_RESERVED.includes(segs[0].toLowerCase())) return { ok: false, reason: "repo_incomplete" };
-    return { ok: true, value: "https://" + host + "/" + segs.join("/") };
+    m = host.match(/^(?:[a-z]{2}(?:-[a-z]+)+-\d)\.console\.aws\.amazon\.com$/);
+    if (m) {
+        if (segs[0] !== "codesuite" || segs[1] !== "codecommit" || segs[2] !== "repositories" || !segs[3]) return { ok: false, reason: "repo_incomplete" };
+        if (!nameRe.test(segs[3])) return { ok: false, reason: "repo_incomplete" };
+        return { ok: true, value: u.origin + "/codesuite/codecommit/repositories/" + segs[3] + u.search };
+    }
+    return { ok: false, reason: "not_repo" };
 }
 
 // Link video: URL http(s) dengan domain publik. Platform apa pun diterima (YouTube, Drive, Loom, dll).
@@ -311,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Website wajib valid. Repo & video opsional, tapi kalau diisi harus valid.
+        // Website & repo (CodeCommit) wajib valid. Video opsional, tapi kalau diisi harus valid.
         // Kalau ada yang salah, form tidak dikirim.
         const webOk = checkWebsite();
         const repoOk = checkRepo();
