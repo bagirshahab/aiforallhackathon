@@ -32,6 +32,7 @@ const MSG = {
     web_invalid: "ลิงก์เว็บไซต์ไม่ถูกต้อง ต้องเป็นลิงก์เต็มที่ขึ้นต้นด้วย https:// เช่น https://myproject.vercel.app / Invalid website link. It must be a full link starting with https:// (e.g. https://myproject.vercel.app).",
     web_is_repo: "ช่องนี้ต้องเป็นลิงก์เว็บไซต์ ไม่ใช่ลิงก์ repository / This field needs a live website link, not a repository link.",
     video_invalid: "ลิงก์วิดีโอไม่ถูกต้อง ต้องเป็นลิงก์เต็มที่ขึ้นต้นด้วย https:// / Invalid video link. It must be a full link starting with https://.",
+    repo_empty: "กรุณากรอกลิงก์ repository / Please enter the repository link.",
     repo_invalid: "ลิงก์ repository ไม่ถูกต้อง ต้องเป็นลิงก์เต็มที่ขึ้นต้นด้วย https:// / Invalid repository link. It must be a full link starting with https://.",
     repo_not_repo: "ต้องเป็นลิงก์ repository จาก GitHub, GitLab, Bitbucket หรือ Codeberg เท่านั้น / Only GitHub, GitLab, Bitbucket and Codeberg repository links are accepted.",
     repo_incomplete: "ลิงก์ต้องชี้ไปที่ repository เช่น https://github.com/username/repository / The link must point to a repository, e.g. https://github.com/username/repository.",
@@ -103,9 +104,9 @@ function websiteError(raw) {
     if (r.ok) return "";
     return r.reason === "is_repo" ? MSG.web_is_repo : MSG.web_invalid;
 }
-// Repository: OPSIONAL. Kosong = valid; kalau diisi harus link repo yang benar.
+// Repository: WAJIB. Harus diisi dan harus link repo yang benar.
 function repoError(raw) {
-    if (!String(raw || "").trim()) return "";
+    if (!String(raw || "").trim()) return MSG.repo_empty;
     const r = validateRepoUrl(raw);
     if (r.ok) return "";
     if (r.reason === "not_repo") return MSG.repo_not_repo;
@@ -327,7 +328,7 @@ document.addEventListener("DOMContentLoaded", () => {
             project_title: projectTitle,
             members,
             website_url: websiteInput.value.trim(),
-            repo_url: repoInput.value.trim(),   // boleh kosong
+            repo_url: repoInput.value.trim(),
             video_url: videoInput.value.trim(), // boleh kosong
             bedrock_used: choiceOf("bedrock_used"),
             agentcore_used: choiceOf("agentcore_used"),
