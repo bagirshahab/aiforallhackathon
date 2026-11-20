@@ -31,7 +31,6 @@ const MSG = {
     web_empty: "กรุณากรอกลิงก์เว็บไซต์ / Please enter the website link.",
     web_invalid: "ลิงก์เว็บไซต์ไม่ถูกต้อง ต้องเป็นลิงก์เต็มที่ขึ้นต้นด้วย https:// เช่น https://myproject.example.com / Invalid website link. It must be a full link starting with https:// (e.g. https://myproject.example.com).",
     web_is_repo: "ช่องนี้ต้องเป็นลิงก์เว็บไซต์ ไม่ใช่ลิงก์ repository / This field needs a live website link, not a repository link.",
-    video_invalid: "ลิงก์วิดีโอไม่ถูกต้อง ต้องเป็นลิงก์เต็มที่ขึ้นต้นด้วย https:// / Invalid video link. It must be a full link starting with https://.",
     repo_empty: "กรุณากรอกลิงก์ repository / Please enter the repository link.",
     repo_invalid: "ลิงก์ repository ไม่ถูกต้อง ต้องเป็นลิงก์เต็มที่ขึ้นต้นด้วย https:// / Invalid repository link. It must be a full link starting with https://.",
     repo_not_repo: "ต้องเป็นลิงก์ AWS CodeCommit (private repository) เท่านั้น ไม่รับ GitHub, GitLab หรือ Bitbucket / Only AWS CodeCommit (private repository) links are accepted. GitHub, GitLab and Bitbucket are not allowed.",
@@ -94,13 +93,6 @@ function validateRepoUrl(raw) {
     return { ok: false, reason: "not_repo" };
 }
 
-// Link video: URL http(s) dengan domain publik. Platform apa pun diterima (YouTube, Drive, Loom, dll).
-function validateVideoUrl(raw) {
-    const u = parseHttpUrl(raw);
-    if (!u) return { ok: false, reason: "invalid" };
-    if (!isPublicHostname(u.hostname.toLowerCase())) return { ok: false, reason: "invalid" };
-    return { ok: true, value: u.href };
-}
 
 // Hasil validasi -> pesan error (atau "" kalau valid)
 function websiteError(raw) {
@@ -117,11 +109,6 @@ function repoError(raw) {
     if (r.reason === "not_repo") return MSG.repo_not_repo;
     if (r.reason === "repo_incomplete") return MSG.repo_incomplete;
     return MSG.repo_invalid;
-}
-// Video: OPSIONAL. Kosong = valid; kalau diisi harus link yang valid.
-function videoError(raw) {
-    if (!String(raw || "").trim()) return "";
-    return validateVideoUrl(raw).ok ? "" : MSG.video_invalid;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -143,8 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const repoInput = document.getElementById("repo_url");
     const websiteErr = document.getElementById("website_url-error");
     const repoErr = document.getElementById("repo_url-error");
-    const videoInput = document.getElementById("video_url");
-    const videoErr = document.getElementById("video_url-error");
     const bedrockGroup = document.getElementById("bedrock-group");
     const agentcoreGroup = document.getElementById("agentcore-group");
 
@@ -160,7 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     function checkWebsite() { const m = websiteError(websiteInput.value); showFieldError(websiteInput, websiteErr, m); return !m; }
     function checkRepo() { const m = repoError(repoInput.value); showFieldError(repoInput, repoErr, m); return !m; }
-    function checkVideo() { const m = videoError(videoInput.value); showFieldError(videoInput, videoErr, m); return !m; }
 
     // Pilihan Yes/No: true / false, atau null kalau belum dijawab.
     function choiceOf(name) {
@@ -177,10 +161,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     websiteInput.addEventListener("blur", () => { if (websiteInput.value.trim()) checkWebsite(); });
     repoInput.addEventListener("blur", () => { if (repoInput.value.trim()) checkRepo(); });
-    videoInput.addEventListener("blur", () => { if (videoInput.value.trim()) checkVideo(); });
     websiteInput.addEventListener("input", () => { if (websiteInput.classList.contains("invalid")) checkWebsite(); });
     repoInput.addEventListener("input", () => { if (repoInput.classList.contains("invalid")) checkRepo(); });
-    videoInput.addEventListener("input", () => { if (videoInput.classList.contains("invalid")) checkVideo(); });
     form.querySelectorAll('input[type="radio"]').forEach((r) => r.addEventListener("change", () => {
         if (choiceOf("bedrock_used") !== null) bedrockGroup.classList.remove("invalid");
         if (choiceOf("agentcore_used") !== null) agentcoreGroup.classList.remove("invalid");
@@ -316,14 +298,13 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Website & repo (CodeCommit) wajib valid. Video opsional, tapi kalau diisi harus valid.
+        // Website & repo (CodeCommit) wajib valid.
         // Kalau ada yang salah, form tidak dikirim.
         const webOk = checkWebsite();
         const repoOk = checkRepo();
-        const videoOk = checkVideo();
-        if (!webOk || !repoOk || !videoOk) {
+        if (!webOk || !repoOk) {
             showMessage(MSG.err_links, "error");
-            (!webOk ? websiteInput : !repoOk ? repoInput : videoInput).focus();
+            (!webOk ? websiteInput : repoInput).focus();
             return;
         }
 
@@ -334,7 +315,6 @@ document.addEventListener("DOMContentLoaded", () => {
             members,
             website_url: websiteInput.value.trim(),
             repo_url: repoInput.value.trim(),
-            video_url: videoInput.value.trim(), // boleh kosong
             bedrock_used: choiceOf("bedrock_used"),
             agentcore_used: choiceOf("agentcore_used"),
         };
@@ -360,7 +340,6 @@ document.addEventListener("DOMContentLoaded", () => {
             form.reset();
             showFieldError(websiteInput, websiteErr, "");
             showFieldError(repoInput, repoErr, "");
-            showFieldError(videoInput, videoErr, "");
             bedrockGroup.classList.remove("invalid");
             agentcoreGroup.classList.remove("invalid");
             resetVerification();
