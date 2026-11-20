@@ -13,7 +13,6 @@ const MSG = {
     err_required: "กรุณากรอกข้อมูลให้ครบทุกช่อง / Please fill in all required fields.",
     err_member: "กรุณากรอกสมาชิกอย่างน้อย 1 คน (หัวหน้าทีม) / Please enter at least 1 team member (Leader).",
     err_links: "กรุณาแก้ไขลิงก์ที่ไม่ถูกต้องก่อนส่ง / Please fix the invalid links before submitting.",
-    err_team_number: "กรุณากรอกหมายเลขทีมเป็นตัวเลข 1-99 / Please enter your team number (a number from 1 to 99).",
     err_choice: "กรุณาตอบทั้งสองข้อ: Amazon Bedrock และ AgentCore / Please answer both questions: Amazon Bedrock and AgentCore.",
     err_email: "กรุณากรอกอีเมลที่ถูกต้อง / Please enter a valid email address.",
     err_not_verified: "กรุณายืนยันอีเมลก่อนส่งผลงาน / Please verify your email before submitting.",
@@ -118,13 +117,6 @@ function videoError(raw) {
     if (!String(raw || "").trim()) return "";
     return validateVideoUrl(raw).ok ? "" : MSG.video_invalid;
 }
-// Nomor tim: bilangan bulat 1-99.
-function parseTeamNumber(raw) {
-    const s = String(raw == null ? "" : raw).trim();
-    if (!/^\d{1,2}$/.test(s)) return null;
-    const n = Number(s);
-    return n >= 1 && n <= 99 ? n : null;
-}
 
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("top20-form");
@@ -147,8 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const repoErr = document.getElementById("repo_url-error");
     const videoInput = document.getElementById("video_url");
     const videoErr = document.getElementById("video_url-error");
-    const teamNumberInput = document.getElementById("team_number");
-    const teamNumberErr = document.getElementById("team_number-error");
     const bedrockGroup = document.getElementById("bedrock-group");
     const agentcoreGroup = document.getElementById("agentcore-group");
 
@@ -165,11 +155,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function checkWebsite() { const m = websiteError(websiteInput.value); showFieldError(websiteInput, websiteErr, m); return !m; }
     function checkRepo() { const m = repoError(repoInput.value); showFieldError(repoInput, repoErr, m); return !m; }
     function checkVideo() { const m = videoError(videoInput.value); showFieldError(videoInput, videoErr, m); return !m; }
-    function checkTeamNumber() {
-        const m = parseTeamNumber(teamNumberInput.value) === null ? MSG.err_team_number : "";
-        showFieldError(teamNumberInput, teamNumberErr, m);
-        return !m;
-    }
 
     // Pilihan Yes/No: true / false, atau null kalau belum dijawab.
     function choiceOf(name) {
@@ -187,11 +172,9 @@ document.addEventListener("DOMContentLoaded", () => {
     websiteInput.addEventListener("blur", () => { if (websiteInput.value.trim()) checkWebsite(); });
     repoInput.addEventListener("blur", () => { if (repoInput.value.trim()) checkRepo(); });
     videoInput.addEventListener("blur", () => { if (videoInput.value.trim()) checkVideo(); });
-    teamNumberInput.addEventListener("blur", () => { if (teamNumberInput.value.trim()) checkTeamNumber(); });
     websiteInput.addEventListener("input", () => { if (websiteInput.classList.contains("invalid")) checkWebsite(); });
     repoInput.addEventListener("input", () => { if (repoInput.classList.contains("invalid")) checkRepo(); });
     videoInput.addEventListener("input", () => { if (videoInput.classList.contains("invalid")) checkVideo(); });
-    teamNumberInput.addEventListener("input", () => { if (teamNumberInput.classList.contains("invalid")) checkTeamNumber(); });
     form.querySelectorAll('input[type="radio"]').forEach((r) => r.addEventListener("change", () => {
         if (choiceOf("bedrock_used") !== null) bedrockGroup.classList.remove("invalid");
         if (choiceOf("agentcore_used") !== null) agentcoreGroup.classList.remove("invalid");
@@ -321,13 +304,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Nomor tim wajib (angka 1-99)
-        if (!checkTeamNumber()) {
-            showMessage(MSG.err_team_number, "error");
-            teamNumberInput.focus();
-            return;
-        }
-
         // Bedrock & AgentCore wajib dijawab
         if (!checkChoices()) {
             showMessage(MSG.err_choice, "error");
@@ -346,7 +322,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const payload = {
-            team_number: parseTeamNumber(teamNumberInput.value),
             team_name: teamName,
             email: emailInput.value.trim(),
             project_title: projectTitle,
@@ -380,7 +355,6 @@ document.addEventListener("DOMContentLoaded", () => {
             showFieldError(websiteInput, websiteErr, "");
             showFieldError(repoInput, repoErr, "");
             showFieldError(videoInput, videoErr, "");
-            showFieldError(teamNumberInput, teamNumberErr, "");
             bedrockGroup.classList.remove("invalid");
             agentcoreGroup.classList.remove("invalid");
             resetVerification();

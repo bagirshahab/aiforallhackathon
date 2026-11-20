@@ -55,13 +55,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="team_number">หมายเลขทีม / Team Number</label>
-                        <input type="text" id="team_number" name="team_number" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="เช่น / e.g. 7" required>
-                        <span class="field-hint">ใช้หมายเลขเดิมทุกครั้งที่ส่ง เพื่อให้ระบบรู้ว่าเป็นทีมเดียวกัน / Use the same number every time you submit so we know it is the same team.</span>
-                        <span class="field-error" id="team_number-error" role="alert"></span>
-                    </div>
-
-                    <div class="form-group">
                         <label for="email">อีเมลติดต่อ (หัวหน้าทีม) / Contact Email (Team Leader)</label>
                         <div class="email-verify-row">
                             <input type="email" id="email" name="email" placeholder="teamleader@example.com" required>
@@ -143,7 +136,7 @@
                         กรุณายืนยันอีเมลก่อนส่งผลงาน / Please verify your email before submitting.
                     </p>
                     <p class="resubmit-note">
-                        ส่งใหม่ได้ ระบบจะใช้ฉบับล่าสุดเท่านั้น / You can resubmit. Only the latest submission is used.
+                        ส่งใหม่ได้ด้วยอีเมลเดิม ระบบจะใช้ฉบับล่าสุดเท่านั้น / You can resubmit with the same email. Only the latest submission is used.
                     </p>
 
                     <div id="form-message" class="form-message" role="status" aria-live="polite"></div>
@@ -165,7 +158,7 @@
             <p class="success-modal-text">
                 ขอบคุณที่ส่งผลงานรอบ Top 20<br>
                 Thank you for your Top 20 submission.<br>
-                ส่งใหม่ได้ ระบบจะใช้ฉบับล่าสุด / You can resubmit; the latest one is used.<br>
+                ส่งใหม่ได้ด้วยอีเมลเดิม ระบบจะใช้ฉบับล่าสุด / You can resubmit with the same email; the latest one is used.<br>
                 โปรดตรวจสอบอีเมลของคุณเพื่อยืนยัน / Please check your email for confirmation.
             </p>
             <button type="button" id="success-modal-close" class="btn-primary">
