@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Top 5 Teams | AI For All Hackathon</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#000;overflow:hidden;font-family:'Prompt',system-ui,sans-serif}
+  #viewport{position:fixed;inset:0;overflow:hidden}
+  #stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center;overflow:hidden;background:#000}
+  #track{display:flex;height:100%;width:calc(1920px * 6);transition:transform .6s cubic-bezier(.4,0,.2,1)}
+  .slide{position:relative;width:1920px;height:1080px;flex:none;background:#000 center/cover no-repeat}
+  .slide.orig{background-image:url(kv-original.jpg)}
+  .slide.team{background-image:url(kv-clean.jpg)}
+  .top5{position:absolute;left:0;right:0;top:442px;text-align:center;font-weight:700;font-size:108px;line-height:1.2;
+    background:linear-gradient(90deg,#ff3b3b 0%,#ff9a2e 45%,#3ddc73 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+    -webkit-text-fill-color:transparent;width:fit-content;margin:0 auto}
+  .name{position:absolute;left:50%;top:572px;transform:translateX(-50%);width:1300px;height:110px;display:flex;align-items:center;justify-content:center;
+    text-align:center;color:#fff;font-weight:700;font-size:84px;line-height:1.1;white-space:nowrap;text-shadow:0 0 24px rgba(0,0,0,.6)}
+  .name:empty::before{content:"\00a0"}
+  .nav{position:fixed;top:50%;transform:translateY(-50%);width:48px;height:72px;border:0;border-radius:10px;background:rgba(20,20,20,.65);color:#fff;font-size:28px;cursor:pointer;z-index:5;opacity:.55;transition:opacity .2s}
+  .nav:hover,.nav:focus-visible{opacity:1}
+  .nav[disabled]{opacity:0;pointer-events:none}
+  #prev{left:12px}#next{right:12px}
+  #dots{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:5}
+  #dots button{width:12px;height:12px;border-radius:50%;border:0;background:rgba(255,255,255,.35);cursor:pointer;padding:0}
+  #dots button[aria-current="true"]{background:#3ddc73;transform:scale(1.25)}
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+    <div id="track">
+      <section class="slide orig" aria-label="Halaman 1"></section>
+      <section class="slide team" aria-label="Halaman 2"><div class="top5">Top 5</div><div class="name" data-rank="1"></div></section>
+      <section class="slide team" aria-label="Halaman 3"><div class="top5">Top 5</div><div class="name" data-rank="2"></div></section>
+      <section class="slide team" aria-label="Halaman 4"><div class="top5">Top 5</div><div class="name" data-rank="3"></div></section>
+      <section class="slide team" aria-label="Halaman 5"><div class="top5">Top 5</div><div class="name" data-rank="4"></div></section>
+      <section class="slide team" aria-label="Halaman 6"><div class="top5">Top 5</div><div class="name" data-rank="5"></div></section>
+    </div>
+  </div>
+</div>
+<button class="nav" id="prev" aria-label="Sebelumnya">&#10094;</button>
+<button class="nav" id="next" aria-label="Berikutnya">&#10095;</button>
+<div id="dots"></div>
+
+<script>
+const API = "https://top20scoring.vercel.app/api/public-leaderboard";
+const TOTAL = 6;
+let idx = Math.min(TOTAL - 1, Math.max(0, (parseInt(location.hash.slice(1)) || 1) - 1));
+
+const stage = document.getElementById("stage"), track = document.getElementById("track");
+function fit() {
+  const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+  stage.style.transform = `translate(-50%,-50%) scale(${s})`;
+}
+addEventListener("resize", fit); fit();
+
+const dots = document.getElementById("dots");
+for (let i = 0; i < TOTAL; i++) {
+  const b = document.createElement("button");
+  b.setAttribute("aria-label", "Ke halaman " + (i + 1));
+  b.onclick = () => go(i);
+  dots.appendChild(b);
+}
+function go(i) {
+  idx = Math.max(0, Math.min(TOTAL - 1, i));
+  track.style.transform = `translateX(${-idx * 1920}px)`;
+  [...dots.children].forEach((d, k) => d.setAttribute("aria-current", k === idx));
+  document.getElementById("prev").disabled = idx === 0;
+  document.getElementById("next").disabled = idx === TOTAL - 1;
+  history.replaceState(null, "", "#" + (idx + 1));
+}
+document.getElementById("prev").onclick = () => go(idx - 1);
+document.getElementById("next").onclick = () => go(idx + 1);
+addEventListener("keydown", e => {
+  if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); go(idx + 1); }
+  else if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); go(idx - 1); }
+  else if (e.key === "Home") go(0);
+  else if (e.key === "End") go(TOTAL - 1);
+});
+let sx = null;
+addEventListener("touchstart", e => { sx = e.touches[0].clientX; }, { passive: true });
+addEventListener("touchend", e => {
+  if (sx === null) return;
+  const dx = e.changedTouches[0].clientX - sx; sx = null;
+  if (Math.abs(dx) > 50) go(idx + (dx < 0 ? 1 : -1));
+});
+go(idx);
+
+// Shrink long names so they stay on one line.
+function setName(el, text) {
+  el.textContent = "";
+  if (!text) return;
+  const span = document.createElement("span");
+  span.textContent = text;
+  el.appendChild(span);
+  let size = 84; el.style.fontSize = size + "px";
+  while (span.offsetWidth > el.clientWidth && size > 28) { size -= 2; el.style.fontSize = size + "px"; }
+}
+
+async function load() {
+  let names = [];
+  try {
+    const res = await fetch(API, { cache: "no-store" });
+    const data = await res.json();
+    if (res.ok && data.published !== false) {
+      names = (data.ranking || [])
+        .filter(r => Number(r.judge_count) > 0)
+        .slice(0, 5)
+        .map(r => (r.team_name || r.project_title || "").trim());
+    }
+  } catch (e) { return; } // keep the current names if the request fails
+  document.querySelectorAll(".name").forEach(el => {
+    const n = names[Number(el.dataset.rank) - 1] || "";
+    if (el.dataset.v !== n) { el.dataset.v = n; setName(el, n); }
+  });
+}
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>
