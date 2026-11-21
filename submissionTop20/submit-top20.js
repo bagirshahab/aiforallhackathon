@@ -315,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
             members,
             website_url: websiteInput.value.trim(),
             repo_url: repoInput.value.trim(),
-            credentials: document.getElementById("credentials").value.trim(), // opsional
+            notes: document.getElementById("notes").value.trim(), // opsional
             bedrock_used: choiceOf("bedrock_used"),
             agentcore_used: choiceOf("agentcore_used"),
         };
