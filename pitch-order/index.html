@@ -4,20 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pitch Order | AI For All Hackathon</title>
-<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%;background:#000;overflow:hidden;font-family:'Prompt',system-ui,sans-serif}
   #viewport{position:fixed;inset:0;overflow:hidden}
   #stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center;overflow:hidden;background:#000}
   #track{display:flex;height:100%;width:calc(1920px * 19);transition:transform .6s cubic-bezier(.4,0,.2,1)}
-  .slide{position:relative;width:1920px;height:1080px;flex:none;background:#000 url(kv-clean.jpg) center/cover no-repeat}
-  .lbl{position:absolute;left:0;right:0;top:436px;text-align:center;font-weight:600;font-size:28px;letter-spacing:.12em;color:#cfe6d8;text-shadow:0 0 18px rgba(0,0,0,.7)}
-  .num{position:absolute;left:0;right:0;top:462px;text-align:center;font-weight:700;font-size:108px;line-height:1.15;
-    background:linear-gradient(90deg,#ff3b3b 0%,#ff9a2e 45%,#3ddc73 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
-    -webkit-text-fill-color:transparent;width:fit-content;margin:0 auto}
-  .name{position:absolute;left:50%;top:590px;transform:translateX(-50%);width:1560px;height:90px;display:flex;align-items:center;justify-content:center;
-    text-align:center;color:#fff;font-weight:700;font-size:72px;line-height:1.1;white-space:nowrap;text-shadow:0 0 24px rgba(0,0,0,.6)}
+  .slide{position:relative;width:1920px;height:1080px;flex:none;background:radial-gradient(ellipse at 50% 50%,#0b2a1c 0%,#04100b 55%,#000 100%)}
+  .grad{background:linear-gradient(90deg,#ff3b3b 0%,#ff9a2e 45%,#3ddc73 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+  .title{position:absolute;left:0;right:0;top:60px;text-align:center;font-weight:800;font-size:96px;line-height:1.2;white-space:nowrap;color:#fff}
+  .title .grad{display:inline-block}
+  .num{position:absolute;left:0;right:0;top:190px;text-align:center;font-weight:800;font-size:380px;line-height:1.1;width:fit-content;margin:0 auto}
+  .name{position:absolute;left:50%;top:660px;transform:translateX(-50%);width:1800px;height:340px;display:flex;align-items:center;justify-content:center;
+    text-align:center;color:#fff;font-weight:700;font-size:170px;line-height:1.2}
   .nav{position:fixed;top:50%;transform:translateY(-50%);width:48px;height:72px;border:0;border-radius:10px;background:rgba(20,20,20,.65);color:#fff;font-size:28px;cursor:pointer;z-index:5;opacity:.55;transition:opacity .2s}
   .nav:hover,.nav:focus-visible{opacity:1}
   .nav[disabled]{opacity:0;pointer-events:none}
@@ -51,7 +51,7 @@ TEAMS.forEach((t, i) => {
   const s = document.createElement("section");
   s.className = "slide";
   s.setAttribute("aria-label", "Pitch " + (i + 1));
-  s.innerHTML = '<div class="lbl">PITCH ORDER</div><div class="num"></div><div class="name"><span></span></div>';
+  s.innerHTML = '<div class="title"><span class="grad">AI</span> FOR ALL <span class="grad">HACKATHON</span></div><div class="num grad"></div><div class="name"><span></span></div>';
   s.querySelector(".num").textContent = i + 1;
   s.querySelector(".name span").textContent = t;
   track.appendChild(s);
@@ -84,10 +84,11 @@ addEventListener("touchend", e => {
   const dx = e.changedTouches[0].clientX - sx; sx = null;
   if (Math.abs(dx) > 50) go(idx + (dx < 0 ? 1 : -1));
 });
+// Largest size that fits the name box (up to 2 lines).
 function shrink() {
   document.querySelectorAll(".name").forEach(el => {
-    const span = el.firstChild; let size = 72; el.style.fontSize = size + "px";
-    while (span.offsetWidth > el.clientWidth && size > 28) { size -= 2; el.style.fontSize = size + "px"; }
+    const span = el.firstChild; let size = 170; el.style.fontSize = size + "px";
+    while ((span.offsetHeight > el.clientHeight || span.scrollWidth > el.clientWidth) && size > 40) { size -= 4; el.style.fontSize = size + "px"; }
   });
 }
 go(idx);
