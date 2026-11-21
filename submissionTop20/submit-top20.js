@@ -4,7 +4,21 @@ const SUBMIT_URL = `${API_BASE}/submit-top20`;
 const SEND_OTP_URL = `${API_BASE}/send-otp`;
 const VERIFY_OTP_URL = `${API_BASE}/verify-otp`;
 
-const SUBMIT_TIMEOUT_MS = 60000;
+// Deadline penutupan Top 20: 21 November 2026, 22:00 waktu Thailand (UTC+7).
+// Setelah waktu ini, halaman dialihkan ke halaman "ditutup". Server juga menolak submission baru.
+const SUBMISSION_DEADLINE = new Date("2026-11-21T22:00:00+07:00");
+function isSubmissionClosed() {
+    return Date.now() >= SUBMISSION_DEADLINE.getTime();
+}
+function goToClosedPage() {
+    window.location.replace("closed.html");
+}
+if (isSubmissionClosed()) {
+    goToClosedPage();
+} else {
+    // Halaman yang sedang terbuka ikut tertutup otomatis saat jam 22:00.
+    setTimeout(goToClosedPage, Math.min(SUBMISSION_DEADLINE.getTime() - Date.now(), 2147483647));
+}const SUBMIT_TIMEOUT_MS = 60000;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const MSG = {
