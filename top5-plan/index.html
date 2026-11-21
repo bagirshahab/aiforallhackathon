@@ -7,7 +7,7 @@
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%;background:#000;overflow:hidden}
-  #track{display:flex;width:300vw;height:100vh;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+  #track{display:flex;width:200vw;height:100vh;transition:transform .55s cubic-bezier(.4,0,.2,1)}
   iframe{flex:none;width:100vw;height:100vh;border:0;background:#000;pointer-events:none}
   .nav{position:fixed;top:50%;transform:translateY(-50%);width:48px;height:72px;border:0;border-radius:10px;background:rgba(20,20,20,.65);color:#fff;font-size:28px;cursor:pointer;z-index:5;opacity:.5;transition:opacity .2s}
   .nav:hover,.nav:focus-visible{opacity:1}
@@ -21,14 +21,13 @@
 <body>
 <div id="track">
   <iframe src="calendar.html" title="Calendar" loading="eager"></iframe>
-  <iframe src="timeline.html" title="Timeline" loading="eager"></iframe>
   <iframe src="detail.html" title="Detail" loading="eager"></iframe>
 </div>
 <button class="nav" id="prev" aria-label="Previous">&#10094;</button>
 <button class="nav" id="next" aria-label="Next">&#10095;</button>
 <div id="dots"></div>
 <script>
-const TOTAL=3, track=document.getElementById("track"), dots=document.getElementById("dots");
+const TOTAL=2, track=document.getElementById("track"), dots=document.getElementById("dots");
 let idx=Math.min(TOTAL-1,Math.max(0,(parseInt(location.hash.slice(1))||1)-1));
 for(let i=0;i<TOTAL;i++){const b=document.createElement("button");b.setAttribute("aria-label","Slide "+(i+1));b.onclick=()=>go(i);dots.appendChild(b)}
 function go(i){
