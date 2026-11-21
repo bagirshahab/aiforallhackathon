@@ -12,82 +12,63 @@
   .grad{background:linear-gradient(90deg,#ff3b3b 0%,#ff9a2e 45%,#3ddc73 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
   .panel{position:absolute;left:110px;right:110px;top:440px;bottom:46px;padding:12px 36px 0;border-radius:28px;
     background:rgba(2,14,10,.86);border:1.5px solid rgba(61,220,115,.35);box-shadow:0 0 60px rgba(61,220,115,.12);backdrop-filter:blur(8px)}
-  h1{font-size:50px;line-height:1.15;font-weight:700;text-align:center;height:58px;white-space:nowrap}
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:8px}
-  .stat{display:flex;align-items:center;gap:16px;height:84px;padding:0 20px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
-  .stat .v{font-size:46px;font-weight:700;line-height:1;white-space:nowrap}
-  .stat .l{font-size:20px;line-height:1.25;color:#cfe6d8}
-  .tl{position:relative;display:grid;grid-template-columns:repeat(9,1fr);margin-top:16px;height:122px}
-  .tl::before{content:"";position:absolute;left:5.5%;right:5.5%;top:11px;height:4px;border-radius:2px;background:linear-gradient(90deg,#ff3b3b,#ff9a2e,#3ddc73)}
-  .n{position:relative;text-align:center;padding-top:34px}
-  .n::before{content:"";position:absolute;left:50%;top:3px;width:20px;height:20px;margin-left:-10px;border-radius:50%;background:#3ddc73;border:3px solid #02100b}
-  .n.f::before{background:#ff9a2e;width:28px;height:28px;margin-left:-14px;top:-1px;box-shadow:0 0 0 6px rgba(255,154,46,.25)}
-  .n b{display:block;font-size:23px;font-weight:600}
-  .n span{display:block;font-size:19px;line-height:1.25;color:#b9d3c4;margin-top:2px}
-  .cols{display:grid;grid-template-columns:.95fr 1.1fr 1.05fr;gap:20px;margin-top:4px}
-  .col{border-radius:16px;padding:14px 22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);height:244px}
-  .col h3{font-size:25px;font-weight:700;margin-bottom:6px}
-  .col p,.col li{font-size:21px;line-height:1.3;color:#e3f1e9}
-  .col ul{list-style:none}
-  .col li{position:relative;padding-left:24px;margin:4px 0}
-  .col li::before{content:"";position:absolute;left:2px;top:.55em;width:10px;height:10px;border-radius:50%;background:#3ddc73}
-  .pm div{margin-top:6px}
-  .pm small{display:block;font-size:17px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#7fe3a3}
-  .pm .b small{color:#ffb35c}
-  .foot{z-index:2;position:absolute;right:0;left:0;text-align:center;bottom:-34px;font-size:15px;color:#7e978a}
-</style>
+  h1{font-size:48px;line-height:1.15;font-weight:700;text-align:center;height:56px;white-space:nowrap}
+  .sub{text-align:center;font-size:23px;color:#cfe6d8;height:34px;margin-top:2px}
+  .sub b{color:#fff}
+  .grid{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:1fr 1fr;gap:14px;margin-top:10px;height:466px}
+  .c{border-radius:16px;padding:10px 16px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.12);overflow:hidden}
+  .c.hot{border-color:rgba(255,154,46,.7);background:rgba(255,154,46,.09)}
+  .c.fin{border-color:#3ddc73;background:rgba(61,220,115,.14);box-shadow:0 0 28px rgba(61,220,115,.25)}
+  .d{font-size:30px;font-weight:700;line-height:1.1}
+  .l{font-size:20px;font-weight:600;color:#fff;margin:1px 0 5px}
+  .c ul{list-style:none}
+  .c li{font-size:18px;line-height:1.28;color:#d9ece1;margin:3px 0}
+  .c li i{font-style:normal;font-weight:700;margin-right:6px}
+  .t{color:#5eea8c}.o{color:#ffb35c}.m{color:#7fc4ff}
+  .foot{position:absolute;right:0;left:0;text-align:center;bottom:-34px;font-size:15px;color:#7e978a}</style>
 </head>
 <body>
 <div id="stage">
   <div class="panel">
-    <h1 class="grad">Top 5: from prototype to MVP in 10 working days</h1>
-    <div class="stats">
-      <div class="stat"><div class="v grad">10</div><div class="l">working days to build<br>23 Nov – 5 Dec</div></div>
-      <div class="stat"><div class="v grad">4 h</div><div class="l">mentor time<br>for each team</div></div>
-      <div class="stat"><div class="v grad">5+5</div><div class="l">teams, one AWS<br>mentor for each</div></div>
-      <div class="stat"><div class="v grad">9 Dec</div><div class="l">Final Day<br>(was 12 Dec)</div></div>
+    <h1 class="grad">Top 5: be ready on these dates</h1>
+    <div class="sub">From prototype to MVP in <b>10 working days</b> · Final Day is <b>Wed 9 Dec</b> (was 12 Dec)</div>
+    <div class="grid">
+      <div class="c hot"><div class="d grad">By Sun 22 Nov</div><div class="l">Before the announcement</div><ul>
+        <li><i class="o">Organisers</i>Confirm Final Day is Wed 9 Dec</li>
+        <li><i class="t">Team</i>Prototype live at its https link</li></ul></div>
+      <div class="c hot"><div class="d grad">Mon 23 Nov, 12:00</div><div class="l">Mentors confirmed</div><ul>
+        <li><i class="o">Organisers</i>Name 5 Thai-speaking AWS mentors, each with a backup</li>
+        <li><i class="o">Agree</i>About 4 hours per mentor</li></ul></div>
+      <div class="c"><div class="d grad">23–24 Nov</div><div class="l">Kick-off call, 60 min</div><ul>
+        <li><i class="t">Team</i>Judges' feedback, user, main journey, real vs fake</li>
+        <li><i class="m">Mentor</i>Checks AWS account, Bedrock, budget alert</li>
+        <li><i class="o">By 24 Nov</i>Accounts and credits live</li></ul></div>
+      <div class="c hot"><div class="d grad">Wed 25 Nov</div><div class="l">Scope locked</div><ul>
+        <li><i class="t">Team</i>One-page MVP scope, data source, Kiro spec, test plan (3–5 users)</li>
+        <li><i class="o">Committee</i>Agree Final format and Must bar</li></ul></div>
+      <div class="c"><div class="d grad">Mon 30 Nov</div><div class="l">Main journey live, 30 min</div><ul>
+        <li><i class="t">Team</i>Works start to end with real data. Demo video script written.</li>
+        <li><i class="o">Organisers</i>Name Final Day judges</li></ul></div>
+      <div class="c"><div class="d grad">Thu 3 Dec</div><div class="l">Users tested, 30 min</div><ul>
+        <li><i class="t">Team</i>3 or more users tested, notes and quotes</li>
+        <li><i class="t">Team</i>Cost per user from AWS bill, top 3 risks</li></ul></div>
+      <div class="c hot"><div class="d grad">Sat 5 Dec, 23:59</div><div class="l">Build closes</div><ul>
+        <li><i class="t">Team</i>Bug fixes only after this</li>
+        <li><i class="t">Team</i>Record demo video (2–3 min) on 5–6 Dec</li></ul></div>
+      <div class="c"><div class="d grad">Mon 7 Dec</div><div class="l">Dress rehearsal, 45 min</div><ul>
+        <li><i class="t">Team</i>Timed pitch, every member speaks, video plays</li>
+        <li><i class="m">Mentor</i>Checks link on phone and laptop</li>
+        <li><i class="o">Note</i>Sun 6 Dec if Mon is a holiday</li></ul></div>
+      <div class="c hot"><div class="d grad">Tue 8 Dec, 12:00</div><div class="l">Final submission</div><ul>
+        <li><i class="t">Team</i>MVP link, pitch deck, demo video link, one-page MVP pack</li>
+        <li><i class="o">Organisers</i>Check every link at 12:05</li></ul></div>
+      <div class="c fin"><div class="d grad">Wed 9 Dec</div><div class="l">FINAL DAY · Bangkok</div><ul>
+        <li><i class="t">Team</i>Live MVP demo and pitch. Video is the backup.</li>
+        <li><i class="o">Organisers</i>Keep AWS accounts live until after the Final</li></ul></div>
     </div>
-    <div class="tl">
-      <div class="n"><b>22 Nov</b><span>Top 5 announced</span></div>
-      <div class="n"><b>23–24 Nov</b><span>Kick-off</span></div>
-      <div class="n"><b>25 Nov</b><span>Scope locked</span></div>
-      <div class="n"><b>30 Nov</b><span>Main journey live</span></div>
-      <div class="n"><b>3 Dec</b><span>Users tested, cost ready</span></div>
-      <div class="n"><b>5 Dec</b><span>Build closes, bug fixes only</span></div>
-      <div class="n"><b>7 Dec</b><span>Dress rehearsal</span></div>
-      <div class="n"><b>8 Dec</b><span>Submit by 12:00</span></div>
-      <div class="n f"><b class="grad">9 Dec</b><span>Final Day</span></div>
-    </div>
-    <div class="cols">
-      <div class="col pm">
-        <h3 class="grad">The goal</h3>
-        <div><small>22 Nov · Prototype</small><p>Works for the team. One feature, test data.</p></div>
-        <div class="b"><small>9 Dec · MVP</small><p>Works for real users, at the same link, with real data and numbers from the AWS bill.</p></div>
-      </div>
-      <div class="col">
-        <h3 class="grad">Must, for every team</h3>
-        <ul>
-          <li>Main journey works start to end, live</li>
-          <li>AI on Amazon Bedrock, in the team's AWS account</li>
-          <li>Real data, 3 or more users tested</li>
-          <li>Cost per user per month, from AWS bill</li>
-          <li>Timed pitch and 2–3 minute demo video</li>
-        </ul>
-      </div>
-      <div class="col">
-        <h3 class="grad">We need from organisers</h3>
-        <ul>
-          <li>Confirm Final Day: Wed 9 Dec</li>
-          <li>5 Thai-speaking AWS mentors and backups, by <b>23 Nov 12:00</b></li>
-          <li>About 4 hours per mentor</li>
-          <li>AWS accounts live until after 9 Dec</li>
-        </ul>
-      </div>
-    </div>
-    <div class="foot">Draft · 20 Nov 2026 · Mon 7 Dec may be a holiday, to be checked</div>
+    <div class="foot">Draft · 20 Nov 2026 · Orange outline = deadline · Mon 7 Dec may be a holiday, to be checked</div>
   </div>
-</div>
-<script>
+</div><script>
 const st=document.getElementById("stage");
 function fit(){st.style.transform=`translate(-50%,-50%) scale(${Math.min(innerWidth/1920,innerHeight/1080)})`}
 addEventListener("resize",fit);fit();
