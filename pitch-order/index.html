@@ -13,10 +13,12 @@
   #track{display:flex;height:100%;width:calc(1920px * 19);transition:transform .6s cubic-bezier(.4,0,.2,1)}
   .slide{position:relative;width:1920px;height:1080px;flex:none;background:#000 url(kv-bare.jpg) center/cover no-repeat}
   .grad{background:linear-gradient(90deg,#ff3b3b 0%,#ff9a2e 45%,#3ddc73 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
-  .title{position:absolute;left:0;right:0;top:36px;text-align:center;font-weight:800;font-size:120px;line-height:1.2;white-space:nowrap;color:#fff;text-shadow:0 0 30px rgba(0,0,0,.7)}
+  .title{position:absolute;left:0;right:0;top:30px;text-align:center;font-weight:800;font-size:108px;line-height:1.1;white-space:nowrap;color:#fff;text-shadow:0 0 30px rgba(0,0,0,.7)}
   .title .grad{display:inline-block}
-  .num{position:absolute;left:0;right:0;top:130px;text-align:center;font-weight:800;font-size:420px;line-height:1.05;width:fit-content;margin:0 auto}
-  .name{position:absolute;left:50%;top:575px;transform:translateX(-50%);width:1800px;height:240px;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;font-weight:700;font-size:190px;line-height:1.15;text-shadow:0 0 28px rgba(0,0,0,.85),0 4px 12px rgba(0,0,0,.8)}
+  .sub{position:absolute;left:0;right:0;top:160px;text-align:center;font-weight:600;font-size:36px;color:#dfeee6;text-shadow:0 0 16px rgba(0,0,0,.85)}
+  .po{position:absolute;left:0;right:0;top:214px;text-align:center;font-weight:700;font-size:40px;letter-spacing:.22em;color:#9fe7c4;text-shadow:0 0 16px rgba(0,0,0,.85)}
+  .num{position:absolute;left:0;right:0;top:250px;text-align:center;font-weight:800;font-size:360px;line-height:1.02;width:fit-content;margin:0 auto}
+  .name{position:absolute;left:50%;top:630px;transform:translateX(-50%);width:1800px;height:220px;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;font-weight:700;font-size:180px;line-height:1.1;text-shadow:0 0 28px rgba(0,0,0,.85),0 4px 12px rgba(0,0,0,.8)}
   .nav{position:fixed;top:50%;transform:translateY(-50%);width:48px;height:72px;border:0;border-radius:10px;background:rgba(20,20,20,.65);color:#fff;font-size:28px;cursor:pointer;z-index:5;opacity:.55;transition:opacity .2s}
   .nav:hover,.nav:focus-visible{opacity:1}
   .nav[disabled]{opacity:0;pointer-events:none}
@@ -50,7 +52,7 @@ TEAMS.forEach((t, i) => {
   const s = document.createElement("section");
   s.className = "slide";
   s.setAttribute("aria-label", "Pitch " + (i + 1));
-  s.innerHTML = '<div class="title"><span class="grad">AI</span> FOR ALL <span class="grad">HACKATHON</span></div><div class="num grad"></div><div class="name"><span></span></div>';
+  s.innerHTML = '<div class="title"><span class="grad">AI</span> FOR ALL <span class="grad">HACKATHON</span></div><div class="sub">เวที Hackathon ระดับประเทศ ที่จะเปลี่ยนไอเดียให้เป็นจริงด้วย AI</div><div class="po">PITCH ORDER</div><div class="num grad"></div><div class="name"><span></span></div>';
   s.querySelector(".num").textContent = i + 1;
   s.querySelector(".name span").textContent = t;
   track.appendChild(s);
@@ -86,7 +88,7 @@ addEventListener("touchend", e => {
 // Largest size that fits the name box (up to 2 lines).
 function shrink() {
   document.querySelectorAll(".name").forEach(el => {
-    const span = el.firstChild; let size = 190; el.style.fontSize = size + "px";
+    const span = el.firstChild; let size = 180; el.style.fontSize = size + "px";
     while ((span.offsetHeight > el.clientHeight || span.scrollWidth > el.clientWidth) && size > 40) { size -= 4; el.style.fontSize = size + "px"; }
   });
 }
