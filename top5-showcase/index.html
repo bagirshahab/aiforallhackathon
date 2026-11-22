@@ -27,6 +27,9 @@
   #dots{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:5}
   #dots button{width:12px;height:12px;border-radius:50%;border:0;background:rgba(255,255,255,.35);cursor:pointer;padding:0}
   #dots button[aria-current="true"]{background:#3ddc73;transform:scale(1.25)}
+  #fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:4}
+  #snd{position:fixed;top:10px;right:12px;z-index:5;width:40px;height:40px;border:0;border-radius:10px;background:rgba(20,20,20,.65);color:#fff;font-size:20px;cursor:pointer;opacity:.55}
+  #snd:hover{opacity:1}
 </style>
 </head>
 <body>
@@ -45,6 +48,8 @@
 <button class="nav" id="prev" aria-label="Sebelumnya">&#10094;</button>
 <button class="nav" id="next" aria-label="Berikutnya">&#10095;</button>
 <div id="dots"></div>
+<canvas id="fx"></canvas>
+<button id="snd" aria-label="Suara" title="Suara on/off">&#128266;</button>
 
 <script>
 const API = "https://top20scoring.vercel.app/api/public-leaderboard";
@@ -58,15 +63,109 @@ function fit() {
 }
 addEventListener("resize", fit); fit();
 
-const dots = document.getElementById("dots");
+// ---- Confetti + celebration sound on slide change ----
+const fx = document.getElementById("fx"), cx = fx.getContext("2d");
+let parts = [], raf = 0;
+function sizeFx() { fx.width = innerWidth * devicePixelRatio; fx.height = innerHeight * devicePixelRatio; }
+addEventListener("resize", sizeFx); sizeFx();
+const COLORS = ["#ff3b3b", "#ff9a2e", "#ffd93d", "#3ddc73", "#3db8ff", "#b86bff", "#ff6bd6", "#ffffff"];
+function burst(big) {
+  const W = fx.width, H = fx.height, d = devicePixelRatio, n = big ? 170 : 110;
+  for (const side of [0, 1]) {
+    for (let i = 0; i < n; i++) {
+      const a = (side ? Math.PI - 0.3 - Math.random() * 0.9 : 0.3 + Math.random() * 0.9) + Math.PI; // upward fan
+      const sp = (14 + Math.random() * 20) * d;
+      parts.push({
+        x: side ? W + 10 : -10, y: H * 0.85,
+        vx: Math.cos(a) * sp * (side ? 1 : 1), vy: Math.sin(a) * sp,
+        w: (8 + Math.random() * 8) * d, h: (5 + Math.random() * 6) * d,
+        r: Math.random() * 6.28, vr: (Math.random() - .5) * .4,
+        c: COLORS[(Math.random() * COLORS.length) | 0], life: 0, max: 150 + Math.random() * 80
+      });
+    }
+  }
+  // rain from the top
+  for (let i = 0; i < n; i++) {
+    parts.push({
+      x: Math.random() * W, y: -20 * d - Math.random() * H * .3,
+      vx: (Math.random() - .5) * 4 * d, vy: (3 + Math.random() * 5) * d,
+      w: (8 + Math.random() * 8) * d, h: (5 + Math.random() * 6) * d,
+      r: Math.random() * 6.28, vr: (Math.random() - .5) * .3,
+      c: COLORS[(Math.random() * COLORS.length) | 0], life: 0, max: 170 + Math.random() * 80
+    });
+  }
+  if (!raf) raf = requestAnimationFrame(tick);
+}
+function tick() {
+  cx.clearRect(0, 0, fx.width, fx.height);
+  const g = .55 * devicePixelRatio;
+  parts = parts.filter(p => p.life < p.max && p.y < fx.height + 40);
+  for (const p of parts) {
+    p.life++; p.vy += g; p.vx *= .985; p.vy *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+    cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r);
+    cx.globalAlpha = Math.min(1, (p.max - p.life) / 30);
+    cx.fillStyle = p.c; cx.scale(1, Math.abs(Math.cos(p.r * 2)) * .8 + .2);
+    cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); cx.restore();
+  }
+  raf = parts.length ? requestAnimationFrame(tick) : 0;
+  if (!raf) cx.clearRect(0, 0, fx.width, fx.height);
+}
+let ac = null, muted = localStorage.getItem("top5mute") === "1";
+const sndBtn = document.getElementById("snd");
+sndBtn.textContent = muted ? "\u{1F507}" : "\u{1F50A}";
+sndBtn.onclick = () => { muted = !muted; localStorage.setItem("top5mute", muted ? "1" : "0"); sndBtn.textContent = muted ? "\u{1F507}" : "\u{1F50A}"; if (!muted) celebrate(true); };
+function tone(f, t0, dur, type, vol, dest) {
+  const o = ac.createOscillator(), g = ac.createGain();
+  o.type = type; o.frequency.value = f;
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(vol, t0 + .02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g); g.connect(dest); o.start(t0); o.stop(t0 + dur + .05);
+}
+function playSound() {
+  if (muted) return;
+  try {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    if (ac.state === "suspended") ac.resume();
+    const t = ac.currentTime, out = ac.createGain(); out.gain.value = .6; out.connect(ac.destination);
+    // whoosh: filtered noise sweep
+    const len = ac.sampleRate * .7, buf = ac.createBuffer(1, len, ac.sampleRate), ch = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) ch[i] = Math.random() * 2 - 1;
+    const ns = ac.createBufferSource(); ns.buffer = buf;
+    const bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 1.2;
+    bp.frequency.setValueAtTime(400, t); bp.frequency.exponentialRampToValueAtTime(5000, t + .35);
+    const ng = ac.createGain();
+    ng.gain.setValueAtTime(.0001, t); ng.gain.exponentialRampToValueAtTime(.5, t + .25); ng.gain.exponentialRampToValueAtTime(.0001, t + .6);
+    ns.connect(bp); bp.connect(ng); ng.connect(out); ns.start(t);
+    // rising sparkle arpeggio then a bright fanfare chord (C major)
+    [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, i) => tone(f, t + .12 + i * .07, .35, "triangle", .22, out));
+    [523.25, 659.25, 783.99, 1046.5].forEach(f => { tone(f, t + .5, 1.1, "sawtooth", .08, out); tone(f * 2, t + .5, .9, "sine", .1, out); });
+    // low impact thump
+    const k = ac.createOscillator(), kg = ac.createGain();
+    k.frequency.setValueAtTime(160, t + .45); k.frequency.exponentialRampToValueAtTime(40, t + .75);
+    kg.gain.setValueAtTime(.7, t + .45); kg.gain.exponentialRampToValueAtTime(.0001, t + .8);
+    k.connect(kg); kg.connect(out); k.start(t + .45); k.stop(t + .85);
+    // crowd-like applause: noise bursts
+    const al = ac.sampleRate * 1.6, ab = ac.createBuffer(1, al, ac.sampleRate), ad = ab.getChannelData(0);
+    for (let i = 0; i < al; i++) ad[i] = (Math.random() * 2 - 1) * (Math.random() < .08 ? 1 : .15);
+    const as = ac.createBufferSource(); as.buffer = ab;
+    const hp = ac.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 1800;
+    const ag = ac.createGain();
+    ag.gain.setValueAtTime(.0001, t + .45); ag.gain.exponentialRampToValueAtTime(.35, t + .7); ag.gain.exponentialRampToValueAtTime(.0001, t + 2);
+    as.connect(hp); hp.connect(ag); ag.connect(out); as.start(t + .45);
+  } catch (e) {}
+}
+function celebrate(big) { burst(big); playSound(); }const dots = document.getElementById("dots");
 for (let i = 0; i < TOTAL; i++) {
   const b = document.createElement("button");
   b.setAttribute("aria-label", "Ke halaman " + (i + 1));
   b.onclick = () => go(i);
   dots.appendChild(b);
 }
-function go(i) {
+function go(i, quiet) {
+  const prev = idx;
   idx = Math.max(0, Math.min(TOTAL - 1, i));
+  if (!quiet && idx !== prev) celebrate(idx > 0);
   track.style.transform = `translateX(${-idx * 1920}px)`;
   [...dots.children].forEach((d, k) => d.setAttribute("aria-current", k === idx));
   document.getElementById("prev").disabled = idx === 0;
@@ -88,7 +187,7 @@ addEventListener("touchend", e => {
   const dx = e.changedTouches[0].clientX - sx; sx = null;
   if (Math.abs(dx) > 50) go(idx + (dx < 0 ? 1 : -1));
 });
-go(idx);
+go(idx, true);
 
 // Shrink long names so they stay on one line.
 function setName(el, text) {
