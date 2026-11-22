@@ -69,48 +69,46 @@ let parts = [], raf = 0;
 function sizeFx() { fx.width = innerWidth * devicePixelRatio; fx.height = innerHeight * devicePixelRatio; }
 addEventListener("resize", sizeFx); sizeFx();
 const COLORS = ["#ff3b3b", "#ff9a2e", "#ffd93d", "#3ddc73", "#3db8ff", "#b86bff", "#ff6bd6", "#ffffff"];
+let emitUntil = 0, emitFrom = 0;
+function spawn(side, d, W, H, fast) {
+  const spread = 0.35 + Math.random() * 0.95;            // angle above horizontal (rad)
+  const a = side === 0 ? -spread : -Math.PI + spread;     // left cannon fires up-right, right cannon up-left
+  const sp = (fast ? 46 : 28 + Math.random() * 22) * d;
+  parts.push({
+    x: side === 0 ? -10 * d : W + 10 * d, y: H * (0.55 + Math.random() * 0.4),
+    vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
+    w: (9 + Math.random() * 9) * d, h: (6 + Math.random() * 7) * d,
+    r: Math.random() * 6.28, vr: (Math.random() - .5) * .45,
+    c: COLORS[(Math.random() * COLORS.length) | 0], life: 0, max: 220 + Math.random() * 120
+  });
+}
 function burst(big) {
-  const W = fx.width, H = fx.height, d = devicePixelRatio, n = big ? 170 : 110;
-  for (const side of [0, 1]) {
-    for (let i = 0; i < n; i++) {
-      const a = (side ? Math.PI - 0.3 - Math.random() * 0.9 : 0.3 + Math.random() * 0.9) + Math.PI; // upward fan
-      const sp = (14 + Math.random() * 20) * d;
-      parts.push({
-        x: side ? W + 10 : -10, y: H * 0.85,
-        vx: Math.cos(a) * sp * (side ? 1 : 1), vy: Math.sin(a) * sp,
-        w: (8 + Math.random() * 8) * d, h: (5 + Math.random() * 6) * d,
-        r: Math.random() * 6.28, vr: (Math.random() - .5) * .4,
-        c: COLORS[(Math.random() * COLORS.length) | 0], life: 0, max: 150 + Math.random() * 80
-      });
-    }
-  }
-  // rain from the top
-  for (let i = 0; i < n; i++) {
-    parts.push({
-      x: Math.random() * W, y: -20 * d - Math.random() * H * .3,
-      vx: (Math.random() - .5) * 4 * d, vy: (3 + Math.random() * 5) * d,
-      w: (8 + Math.random() * 8) * d, h: (5 + Math.random() * 6) * d,
-      r: Math.random() * 6.28, vr: (Math.random() - .5) * .3,
-      c: COLORS[(Math.random() * COLORS.length) | 0], life: 0, max: 170 + Math.random() * 80
-    });
-  }
+  const now = performance.now();
+  emitFrom = now; emitUntil = now + (big ? 3800 : 1800);
+  const W = fx.width, H = fx.height, d = devicePixelRatio;
+  for (let i = 0; i < (big ? 160 : 90); i++) { spawn(0, d, W, H, true); spawn(1, d, W, H, true); } // opening blast
   if (!raf) raf = requestAnimationFrame(tick);
 }
 function tick() {
-  cx.clearRect(0, 0, fx.width, fx.height);
-  const g = .55 * devicePixelRatio;
-  parts = parts.filter(p => p.life < p.max && p.y < fx.height + 40);
+  const W = fx.width, H = fx.height, d = devicePixelRatio, now = performance.now();
+  if (now < emitUntil) {                                   // continuous streams from both sides
+    const k = 1 - (now - emitFrom) / (emitUntil - emitFrom);
+    const n = Math.ceil(9 * k + 2);
+    for (let i = 0; i < n; i++) { spawn(0, d, W, H, false); spawn(1, d, W, H, false); }
+  }
+  cx.clearRect(0, 0, W, H);
+  const g = .42 * d;
+  parts = parts.filter(p => p.life < p.max && p.y < H + 60 * d);
   for (const p of parts) {
-    p.life++; p.vy += g; p.vx *= .985; p.vy *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+    p.life++; p.vy += g; p.vx *= .975; p.vy *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr;
     cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r);
     cx.globalAlpha = Math.min(1, (p.max - p.life) / 30);
     cx.fillStyle = p.c; cx.scale(1, Math.abs(Math.cos(p.r * 2)) * .8 + .2);
     cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); cx.restore();
   }
-  raf = parts.length ? requestAnimationFrame(tick) : 0;
-  if (!raf) cx.clearRect(0, 0, fx.width, fx.height);
-}
-let ac = null, muted = localStorage.getItem("top5mute") === "1";
+  raf = (parts.length || now < emitUntil) ? requestAnimationFrame(tick) : 0;
+  if (!raf) cx.clearRect(0, 0, W, H);
+}let ac = null, muted = localStorage.getItem("top5mute") === "1";
 const sndBtn = document.getElementById("snd");
 sndBtn.textContent = muted ? "\u{1F507}" : "\u{1F50A}";
 sndBtn.onclick = () => { muted = !muted; localStorage.setItem("top5mute", muted ? "1" : "0"); sndBtn.textContent = muted ? "\u{1F507}" : "\u{1F50A}"; if (!muted) celebrate(true); };
@@ -122,40 +120,73 @@ function tone(f, t0, dur, type, vol, dest) {
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
   o.connect(g); g.connect(dest); o.start(t0); o.stop(t0 + dur + .05);
 }
+let lastOut = null;
+function noiseBuf(sec) {
+  const n = (ac.sampleRate * sec) | 0, b = ac.createBuffer(1, n, ac.sampleRate), c = b.getChannelData(0);
+  for (let i = 0; i < n; i++) c[i] = Math.random() * 2 - 1;
+  return b;
+}
+function brass(f, t0, dur, vol, dest) {
+  const g = ac.createGain(), lp = ac.createBiquadFilter();
+  lp.type = "lowpass"; lp.Q.value = 2;
+  lp.frequency.setValueAtTime(500, t0); lp.frequency.exponentialRampToValueAtTime(3200, t0 + .08);
+  lp.frequency.exponentialRampToValueAtTime(1800, t0 + dur);
+  g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(vol, t0 + .03);
+  g.gain.setValueAtTime(vol, t0 + Math.max(.05, dur - .08)); g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+  lp.connect(g); g.connect(dest);
+  [-6, 6].forEach(det => { const o = ac.createOscillator(); o.type = "sawtooth"; o.frequency.value = f; o.detune.value = det; o.connect(lp); o.start(t0); o.stop(t0 + dur + .05); });
+}
 function playSound() {
   if (muted) return;
   try {
     ac = ac || new (window.AudioContext || window.webkitAudioContext)();
     if (ac.state === "suspended") ac.resume();
-    const t = ac.currentTime, out = ac.createGain(); out.gain.value = .6; out.connect(ac.destination);
-    // whoosh: filtered noise sweep
-    const len = ac.sampleRate * .7, buf = ac.createBuffer(1, len, ac.sampleRate), ch = buf.getChannelData(0);
-    for (let i = 0; i < len; i++) ch[i] = Math.random() * 2 - 1;
-    const ns = ac.createBufferSource(); ns.buffer = buf;
-    const bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 1.2;
-    bp.frequency.setValueAtTime(400, t); bp.frequency.exponentialRampToValueAtTime(5000, t + .35);
-    const ng = ac.createGain();
-    ng.gain.setValueAtTime(.0001, t); ng.gain.exponentialRampToValueAtTime(.5, t + .25); ng.gain.exponentialRampToValueAtTime(.0001, t + .6);
-    ns.connect(bp); bp.connect(ng); ng.connect(out); ns.start(t);
-    // rising sparkle arpeggio then a bright fanfare chord (C major)
-    [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, i) => tone(f, t + .12 + i * .07, .35, "triangle", .22, out));
-    [523.25, 659.25, 783.99, 1046.5].forEach(f => { tone(f, t + .5, 1.1, "sawtooth", .08, out); tone(f * 2, t + .5, .9, "sine", .1, out); });
-    // low impact thump
+    const t = ac.currentTime + .02;
+    if (lastOut) { lastOut.gain.cancelScheduledValues(ac.currentTime); lastOut.gain.setTargetAtTime(0, ac.currentTime, .05); }
+    const out = ac.createGain(); out.gain.value = .7; lastOut = out;
+    const comp = ac.createDynamicsCompressor(); out.connect(comp); comp.connect(ac.destination);
+    // timpani roll leading in
+    for (let i = 0; i < 9; i++) {
+      const o = ac.createOscillator(), g = ac.createGain(), s = t + i * .055;
+      o.frequency.setValueAtTime(110, s); o.frequency.exponentialRampToValueAtTime(80, s + .12);
+      g.gain.setValueAtTime(.12 + i * .03, s); g.gain.exponentialRampToValueAtTime(.0001, s + .14);
+      o.connect(g); g.connect(out); o.start(s); o.stop(s + .16);
+    }
+    // champion fanfare (original melody in C major)
+    const F = { G3: 196, C4: 261.63, E4: 329.63, G4: 392, C5: 523.25, D5: 587.33, E5: 659.25, G5: 783.99, C6: 1046.5 };
+    const s0 = t + .5;
+    [["G4", 0, .13], ["G4", .16, .13], ["G4", .32, .13], ["C5", .48, .5], ["E5", 1.0, .22], ["D5", 1.25, .22], ["E5", 1.5, .22], ["G5", 1.75, .5]]
+      .forEach(([n, o, d]) => { brass(F[n], s0 + o, d, .2, out); brass(F[n] / 2, s0 + o, d, .12, out); });
+    // final triumphant chord
+    const sc = s0 + 2.35;
+    ["G3", "C4", "E4", "G4", "C5", "E5", "G5", "C6"].forEach(n => brass(F[n], sc, 2.3, .15, out));
+    // cymbal crash on the chord
+    const cs = ac.createBufferSource(); cs.buffer = noiseBuf(3);
+    const ch = ac.createBiquadFilter(); ch.type = "highpass"; ch.frequency.value = 5000;
+    const cg = ac.createGain(); cg.gain.setValueAtTime(.0001, sc); cg.gain.exponentialRampToValueAtTime(.45, sc + .01); cg.gain.exponentialRampToValueAtTime(.0001, sc + 2.6);
+    cs.connect(ch); ch.connect(cg); cg.connect(out); cs.start(sc);
+    // big bass hit
     const k = ac.createOscillator(), kg = ac.createGain();
-    k.frequency.setValueAtTime(160, t + .45); k.frequency.exponentialRampToValueAtTime(40, t + .75);
-    kg.gain.setValueAtTime(.7, t + .45); kg.gain.exponentialRampToValueAtTime(.0001, t + .8);
-    k.connect(kg); kg.connect(out); k.start(t + .45); k.stop(t + .85);
-    // crowd-like applause: noise bursts
-    const al = ac.sampleRate * 1.6, ab = ac.createBuffer(1, al, ac.sampleRate), ad = ab.getChannelData(0);
-    for (let i = 0; i < al; i++) ad[i] = (Math.random() * 2 - 1) * (Math.random() < .08 ? 1 : .15);
-    const as = ac.createBufferSource(); as.buffer = ab;
-    const hp = ac.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 1800;
+    k.frequency.setValueAtTime(120, sc); k.frequency.exponentialRampToValueAtTime(35, sc + .4);
+    kg.gain.setValueAtTime(.8, sc); kg.gain.exponentialRampToValueAtTime(.0001, sc + .6);
+    k.connect(kg); kg.connect(out); k.start(sc); k.stop(sc + .7);
+    // crowd cheer swelling into the chord, then applause
+    const cr = ac.createBufferSource(); cr.buffer = noiseBuf(6);
+    const f1 = ac.createBiquadFilter(); f1.type = "bandpass"; f1.frequency.value = 1100; f1.Q.value = .7;
+    const lfo = ac.createOscillator(), lg = ac.createGain(); lfo.frequency.value = 6; lg.gain.value = .12;
+    const cg2 = ac.createGain(); cg2.gain.value = .25; lfo.connect(lg); lg.connect(cg2.gain);
+    const env = ac.createGain();
+    env.gain.setValueAtTime(.0001, s0 + 1.2); env.gain.exponentialRampToValueAtTime(.9, sc + .3); env.gain.exponentialRampToValueAtTime(.0001, sc + 3.6);
+    cr.connect(f1); f1.connect(cg2); cg2.connect(env); env.connect(out); cr.start(s0 + 1.2); lfo.start(s0 + 1.2);
+    const al = ac.createBufferSource(); const ab = ac.createBuffer(1, ac.sampleRate * 6, ac.sampleRate), ad = ab.getChannelData(0);
+    for (let i = 0; i < ad.length; i++) ad[i] = (Math.random() * 2 - 1) * (Math.random() < .06 ? 1 : .1);
+    al.buffer = ab;
+    const hp = ac.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 1500;
     const ag = ac.createGain();
-    ag.gain.setValueAtTime(.0001, t + .45); ag.gain.exponentialRampToValueAtTime(.35, t + .7); ag.gain.exponentialRampToValueAtTime(.0001, t + 2);
-    as.connect(hp); hp.connect(ag); ag.connect(out); as.start(t + .45);
+    ag.gain.setValueAtTime(.0001, sc + .2); ag.gain.exponentialRampToValueAtTime(.6, sc + .8); ag.gain.setValueAtTime(.6, sc + 2.5); ag.gain.exponentialRampToValueAtTime(.0001, sc + 5);
+    al.connect(hp); hp.connect(ag); ag.connect(out); al.start(sc + .2);
   } catch (e) {}
-}
-function celebrate(big) { burst(big); playSound(); }const dots = document.getElementById("dots");
+}function celebrate(big) { burst(big); playSound(); }const dots = document.getElementById("dots");
 for (let i = 0; i < TOTAL; i++) {
   const b = document.createElement("button");
   b.setAttribute("aria-label", "Ke halaman " + (i + 1));
