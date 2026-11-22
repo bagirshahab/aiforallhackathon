@@ -120,7 +120,7 @@ let lastOut = null;
 const BAR = 2.353;
 const INTRO_START = 1.85, INTRO_END = 20.65;      // 8-bar intro, looped
 const DROP_START = 20.62, DROP_LEN = BAR * 3;     // 3 bars of the drop, then fade
-let song = null, trackLoading = false, dropEnd = 0;
+let song = null, trackLoading = false, dropEnd = -10;
 function ensureAudio() {
   ac = ac || new (window.AudioContext || window.webkitAudioContext)();
   if (ac.state === "suspended") ac.resume();
