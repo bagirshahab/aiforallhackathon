@@ -115,68 +115,67 @@ const sndBtn = document.getElementById("snd");
 sndBtn.textContent = muted ? "\u{1F507}" : "\u{1F50A}";
 sndBtn.onclick = () => { muted = !muted; localStorage.setItem("top5mute", muted ? "1" : "0"); sndBtn.textContent = muted ? "\u{1F507}" : "\u{1F50A}"; if (muted) stopLoop(); else if (idx < TOTAL - 1) startLoop(); };
 let lastOut = null;
-// ---- Recorded audio (public domain) ----
-// drumroll.mp3: "Drum Roll", U.S. Air Force Band. fanfare.mp3: "Ceremonial Fanfare", U.S. Air Force Heritage of America Band.
-// Source: Wikimedia Commons / music.af.mil public-domain music.
-const FAN_START = 34.7, FAN_END = 41.3;            // final section of the fanfare
-const ROLL_START = 3, ROLL_END = 60;               // steady part of the drum roll, looped
-const bufs = {};
+// ---- Winner backsound (winner.mp3, first 30 s of the user-supplied song) ----
+// ~102 bpm, bar = 2.353 s. Intro (8 bars) loops while waiting; a click jumps to the drop.
+const BAR = 2.353;
+const INTRO_START = 1.85, INTRO_END = 20.65;      // 8-bar intro, looped
+const DROP_START = 20.62, DROP_LEN = BAR * 3;     // 3 bars of the drop, then fade
+let song = null, trackLoading = false, dropEnd = 0;
 function ensureAudio() {
   ac = ac || new (window.AudioContext || window.webkitAudioContext)();
   if (ac.state === "suspended") ac.resume();
-  for (const [k, url] of [["roll", "drumroll.mp3"], ["fan", "fanfare.mp3"]]) {
-    if (bufs[k] !== undefined) continue;
-    bufs[k] = null;
-    fetch(url).then(r => r.arrayBuffer()).then(b => new Promise((ok, no) => ac.decodeAudioData(b, ok, no)))
-      .then(buf => { bufs[k] = buf; if (k === "roll" && loopWanted) startLoop(); })
-      .catch(() => { delete bufs[k]; });
-  }
+  if (song || trackLoading) return;
+  trackLoading = true;
+  fetch("winner.mp3").then(r => r.arrayBuffer()).then(b => new Promise((ok, no) => ac.decodeAudioData(b, ok, no)))
+    .then(buf => { song = buf; if (loopWanted) startLoop(); })
+    .catch(() => {}).finally(() => { trackLoading = false; });
 }
 function playSound() {
   if (muted) return;
   try {
     ensureAudio();
-    if (!bufs.fan) return;
+    if (!song) return;
     if (lastOut) { lastOut.gain.cancelScheduledValues(ac.currentTime); lastOut.gain.setTargetAtTime(0, ac.currentTime, .05); }
-    const t = ac.currentTime + .02, len = FAN_END - FAN_START;
+    const t = ac.currentTime + .01; dropEnd = t + DROP_LEN;
     const out = ac.createGain(); lastOut = out;
-    out.gain.setValueAtTime(.0001, t); out.gain.exponentialRampToValueAtTime(1, t + .03);
-    out.gain.setValueAtTime(1, t + len - .4); out.gain.exponentialRampToValueAtTime(.0001, t + len);
+    out.gain.setValueAtTime(1, t);
+    out.gain.setValueAtTime(1, t + DROP_LEN - 1.2); out.gain.linearRampToValueAtTime(0, t + DROP_LEN);
     out.connect(ac.destination);
-    const s = ac.createBufferSource(); s.buffer = bufs.fan; s.connect(out);
-    s.start(t, FAN_START, len);
+    const s = ac.createBufferSource(); s.buffer = song; s.connect(out);
+    s.start(t, DROP_START, DROP_LEN + .05);
   } catch (e) {}
 }
-// ---- Drum roll loop while waiting for the next winner ----
+// ---- Intro loop while waiting for the next winner ----
 let loopMaster = null, loopSrc = null, loopOn = false, loopWanted = false;
-function startLoop() {
+function startLoop(fadeIn) {
   if (muted || loopOn) return;
   loopWanted = true;
   try {
     ensureAudio();
-    if (!bufs.roll) return;                       // starts once the file has loaded
+    if (!song) return;                           // starts once the file has loaded
     loopOn = true;
     loopMaster = ac.createGain(); loopMaster.gain.value = .0001; loopMaster.connect(ac.destination);
-    loopSrc = ac.createBufferSource(); loopSrc.buffer = bufs.roll;
-    loopSrc.loop = true; loopSrc.loopStart = ROLL_START; loopSrc.loopEnd = ROLL_END;
-    loopSrc.connect(loopMaster); loopSrc.start(0, ROLL_START);
-    loopLevel(.7, .5);
+    loopSrc = ac.createBufferSource(); loopSrc.buffer = song;
+    loopSrc.loop = true; loopSrc.loopStart = INTRO_START; loopSrc.loopEnd = INTRO_END;
+    loopSrc.connect(loopMaster); loopSrc.start(0, INTRO_START);
+    loopLevel(.8, fadeIn || .3);
   } catch (e) { loopOn = false; }
 }
 function loopLevel(v, tc) { if (loopMaster) loopMaster.gain.setTargetAtTime(Math.max(v, .0001), ac.currentTime, tc); }
-let resumeTimer = 0;
-function duckLoop() {
-  loopLevel(0, .03); clearTimeout(resumeTimer);
-  resumeTimer = setTimeout(() => { if (!muted && idx < TOTAL - 1) loopLevel(.6, 1.2); }, (FAN_END - FAN_START + .8) * 1000);
-}
-function stopLoop() {
-  loopOn = false; loopWanted = false; clearTimeout(resumeTimer);
+function killLoop() {
+  loopOn = false;
   if (loopMaster) {
-    loopLevel(0, .05); const m = loopMaster, s = loopSrc; loopMaster = loopSrc = null;
-    setTimeout(() => { try { s.stop(); } catch (e) {} m.disconnect(); }, 600);
+    loopLevel(0, .03); const m = loopMaster, s = loopSrc; loopMaster = loopSrc = null;
+    setTimeout(() => { try { s.stop(); } catch (e) {} m.disconnect(); }, 300);
   }
 }
-["pointerdown", "keydown", "touchstart"].forEach(ev => addEventListener(ev, () => { ensureAudio(); if (!loopOn && idx < TOTAL - 1) startLoop(); }, { passive: true }));function celebrate(big) { burst(big); duckLoop(); playSound(); }const dots = document.getElementById("dots");
+let resumeTimer = 0;
+function duckLoop() {                              // cut the intro; restart it from bar 1 after the drop
+  killLoop(); clearTimeout(resumeTimer);
+  resumeTimer = setTimeout(() => { if (!muted && idx < TOTAL - 1) startLoop(1); }, (DROP_LEN + .5) * 1000);
+}
+function stopLoop() { loopWanted = false; clearTimeout(resumeTimer); killLoop(); }
+["pointerdown", "keydown", "touchstart"].forEach(ev => addEventListener(ev, () => { ensureAudio(); if (!loopOn && idx < TOTAL - 1 && ac.currentTime > dropEnd + .4) startLoop(); }, { passive: true }));function celebrate(big) { burst(big); duckLoop(); playSound(); }const dots = document.getElementById("dots");
 for (let i = 0; i < TOTAL; i++) {
   const b = document.createElement("button");
   b.setAttribute("aria-label", "Ke halaman " + (i + 1));
